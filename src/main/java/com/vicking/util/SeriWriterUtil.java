@@ -137,6 +137,7 @@ public class SeriWriterUtil {
         sb4Writer.append("package ").append(clazz.getPackage().getName()).append(";").append(ENDWORD);
         sb4Writer.append("import java.io.IOException;").append(ENDWORD);
         sb4Writer.append("import java.io.OutputStream;").append(ENDWORD);
+        sb4Writer.append("import java.util.Map;").append(ENDWORD);
         sb4Writer.append("public class ").append(simpleName).append("Writer {").append(ENDWORD);
         sb4Writer.append("\tpublic static void write(OutputStream os,").append(simpleName).append(" o) throws IOException {").append(ENDWORD);
         sb4Writer.append("\t\tif (o == null) {").append(ENDWORD);
@@ -197,56 +198,145 @@ public class SeriWriterUtil {
             parameterizedType = (ParameterizedType) fieldInfo.field.getGenericType();
         } catch (ClassCastException e) {}
 
-        javaWriterBuilder(sb4Writer, sb4Reader, clazz, propertyType, fieldName, writeMethodName, readMethod, parameterizedType);
+        javaWriterBuilder(sb4Writer, sb4Reader, clazz, propertyType, fieldName, writeMethodName, readMethod, parameterizedType, 0);
     }
     public static void javaWriterBuilder(StringBuilder sb4Writer,StringBuilder sb4Reader, Class<?> clazz,
-                                         Class<?> propertyType, String fieldName, String writeMethodName, Method readMethod, ParameterizedType parameterizedType
+                                         Class<?> propertyType, String fieldName, String writeMethodName,
+                                         Method readMethod, ParameterizedType parameterizedType, int mapKV
     ) {
 
         if (propertyType == Date.class) {
-            sb4Writer.append("\t\tSeriUtil.putDate(os, ");
+            if (mapKV == 1) {
+                sb4Writer.append("\t\tSeriUtil.putDate(os, entry.getKey());").append(ENDWORD);
+                return;
+            } else if (mapKV == 2) {
+                sb4Writer.append("\t\tSeriUtil.putDate(os, entry.getValue());").append(ENDWORD);
+                return;
+            } else if (mapKV == 3) {
+                sb4Reader.append("DeseriUtil.getDate(is)");
+                return;
+            } else {
+                sb4Writer.append("\t\tSeriUtil.putDate(os, ");
+            }
 
             sb4Reader.append("\t\to.").append(writeMethodName).append("(");
             sb4Reader.append("DeseriUtil.getDate(is)");
             sb4Reader.append(");").append(ENDWORD);
         } else if (propertyType == double.class || propertyType == Double.class) {
-            sb4Writer.append("\t\tSeriUtil.putDouble(os, ");
+            if (mapKV == 1) {
+                sb4Writer.append("\t\tSeriUtil.putDouble(os, entry.getKey());").append(ENDWORD);
+                return;
+            } else if (mapKV == 2) {
+                sb4Writer.append("\t\tSeriUtil.putDouble(os, entry.getValue());").append(ENDWORD);
+                return;
+            } else if (mapKV == 3) {
+                sb4Reader.append("DeseriUtil.getDouble(is)");
+                return;
+            } else {
+                sb4Writer.append("\t\tSeriUtil.putDouble(os, ");
+            }
 
             sb4Reader.append("\t\to.").append(writeMethodName).append("(");
             sb4Reader.append("DeseriUtil.getDouble(is)");
             sb4Reader.append(");").append(ENDWORD);
         } else if (propertyType == float.class || propertyType == Float.class) {
-            sb4Writer.append("\t\tSeriUtil.putFloat(os, ");
+            if (mapKV == 1) {
+                sb4Writer.append("\t\tSeriUtil.putFloat(os, entry.getKey());").append(ENDWORD);
+                return;
+            } else if (mapKV == 2) {
+                sb4Writer.append("\t\tSeriUtil.putFloat(os, entry.getValue());").append(ENDWORD);
+                return;
+            } else if (mapKV == 3) {
+                sb4Reader.append("DeseriUtil.getFloat(is)");
+                return;
+            } else {
+                sb4Writer.append("\t\tSeriUtil.putFloat(os, ");
+            }
 
             sb4Reader.append("\t\to.").append(writeMethodName).append("(");
             sb4Reader.append("DeseriUtil.getFloat(is)");
             sb4Reader.append(");").append(ENDWORD);
         } else if (propertyType == byte.class || propertyType == Byte.class) {
-            sb4Writer.append("\t\tSeriUtil.put(os, ");
+            if (mapKV == 1) {
+                sb4Writer.append("\t\tSeriUtil.put(os, entry.getKey());").append(ENDWORD);
+                return;
+            } else if (mapKV == 2) {
+                sb4Writer.append("\t\tSeriUtil.put(os, entry.getValue());").append(ENDWORD);
+                return;
+            } else if (mapKV == 3) {
+                sb4Reader.append("(byte)DeseriUtil.get(is)");
+                return;
+            } else {
+                sb4Writer.append("\t\tSeriUtil.put(os, ");
+            }
 
             sb4Reader.append("\t\to.").append(writeMethodName).append("(");
             sb4Reader.append("(byte)DeseriUtil.get(is)");
             sb4Reader.append(");").append(ENDWORD);
         } else if (propertyType == short.class || propertyType == Short.class) {
-            sb4Writer.append("\t\tSeriUtil.putShort(os, ");
+            if (mapKV == 1) {
+                sb4Writer.append("\t\tSeriUtil.putShort(os, entry.getKey());").append(ENDWORD);
+                return;
+            } else if (mapKV == 2) {
+                sb4Writer.append("\t\tSeriUtil.putShort(os, entry.getValue());").append(ENDWORD);
+                return;
+            } else if (mapKV == 3) {
+                sb4Reader.append("DeseriUtil.getShort(is)");
+                return;
+            } else {
+                sb4Writer.append("\t\tSeriUtil.putShort(os, ");
+            }
 
             sb4Reader.append("\t\to.").append(writeMethodName).append("(");
             sb4Reader.append("DeseriUtil.getShort(is)");
             sb4Reader.append(");").append(ENDWORD);
         } else if (propertyType == int.class || propertyType == Integer.class) {
-            sb4Writer.append("\t\tSeriUtil.putInt(os, ");
+            if (mapKV == 1) {
+                sb4Writer.append("\t\tSeriUtil.putInt(os, entry.getKey());").append(ENDWORD);
+                return;
+            } else if (mapKV == 2) {
+                sb4Writer.append("\t\tSeriUtil.putInt(os, entry.getValue());").append(ENDWORD);
+                return;
+            } else if (mapKV == 3) {
+                sb4Reader.append("DeseriUtil.getInt(is)");
+                return;
+            } else {
+                sb4Writer.append("\t\tSeriUtil.putInt(os, ");
+            }
+
 
             sb4Reader.append("\t\to.").append(writeMethodName).append("(");
             sb4Reader.append("DeseriUtil.getInt(is)");
             sb4Reader.append(");").append(ENDWORD);
         } else if (propertyType == long.class || propertyType == Long.class) {
-            sb4Writer.append("\t\tSeriUtil.putLong(os, ");
-
+            if (mapKV == 1) {
+                sb4Writer.append("\t\tSeriUtil.putLong(os, entry.getKey());").append(ENDWORD);
+                return;
+            } else if (mapKV == 2) {
+                sb4Writer.append("\t\tSeriUtil.putLong(os, entry.getValue());").append(ENDWORD);
+                return;
+            } else if (mapKV == 3) {
+                sb4Reader.append("DeseriUtil.getLong(is)");
+                return;
+            } else {
+                sb4Writer.append("\t\tSeriUtil.putLong(os, ");
+            }
             sb4Reader.append("\t\to.").append(writeMethodName).append("(");
             sb4Reader.append("DeseriUtil.getLong(is)");
             sb4Reader.append(");").append(ENDWORD);
         } else if (propertyType == String.class) {
-            sb4Writer.append("\t\tSeriUtil.putString(os, ");
+            if (mapKV == 1) {
+                sb4Writer.append("\t\tSeriUtil.putString(os, entry.getKey());").append(ENDWORD);
+                return;
+            } else if (mapKV == 2) {
+                sb4Writer.append("\t\tSeriUtil.putString(os, entry.getValue());").append(ENDWORD);
+                return;
+            } else if (mapKV == 3) {
+                sb4Reader.append("DeseriUtil.getString(is)");
+                return;
+            } else {
+                sb4Writer.append("\t\tSeriUtil.putString(os, ");
+            }
 
             sb4Reader.append("\t\to.").append(writeMethodName).append("(");
             sb4Reader.append("DeseriUtil.getString(is)");
@@ -326,23 +416,74 @@ public class SeriWriterUtil {
             }
         } else if (Map.class.isAssignableFrom(propertyType)) {
             log.info("Map");
-//            Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
-//            System.out.println(actualTypeArguments.length);
-//            if (actualTypeArguments.length == 2) {
-//                Type kt = actualTypeArguments[0];
-//                Type vt = actualTypeArguments[1];
-//                // 写入数量
-//                sb4Writer.append("\t\tSeriUtil.putShort(os, (short)");
-//                if (readMethod == null) {
-//                    sb4Writer.append("o.").append(fieldName).append(".size());").append(ENDWORD);
-//                } else {
-//                    sb4Writer.append("o.").append(readMethod.getName()).append("()").append(".size());").append(ENDWORD);
+            Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
+            if (actualTypeArguments.length == 2) {
+                Type kt = actualTypeArguments[0];
+                Type vt = actualTypeArguments[1];
+
+                //System.out.println(kt); class java.lang.Integer
+                //System.out.println(vt); class java.lang.String
+                // 写入数量
+                sb4Writer.append("\t\tSeriUtil.putShort(os, (short)");
+                if (readMethod == null) {
+                    sb4Writer.append("o.").append(fieldName).append(".size());").append(ENDWORD);
+                } else {
+                    sb4Writer.append("o.").append(readMethod.getName()).append("()").append(".size());").append(ENDWORD);
+                }
+
+                sb4Writer.append("\t\tfor (Map.Entry<").append(kt.getTypeName()).append(",").append(vt.getTypeName()).append("> entry : ");
+                appendGetValue(sb4Writer, fieldName, readMethod);
+                sb4Writer.append(".entrySet()) {").append(ENDWORD);
+                sb4Writer.append("\t");
+                try {
+                    javaWriterBuilder(sb4Writer, sb4Reader, clazz, Class.forName(kt.getTypeName()), "", null, null, null, 1);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                sb4Writer.append("\t");
+                try {
+                    javaWriterBuilder(sb4Writer, sb4Reader, clazz, Class.forName(vt.getTypeName()), "", null, null, null, 2);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+//                ParameterizedType subParameterizedType = null;
+//                try {
+//                    parameterizedType = (ParameterizedType) fieldInfo.field.getGenericType();
+//                } catch (ClassCastException e) {}
+
+                sb4Writer.append("\t\t}").append(ENDWORD);
+
+
+                sb4Reader.append("\t\t{short size = DeseriUtil.getShort(is);").append(ENDWORD);
+                sb4Reader.append("\t\tfor (int i = 0; i < size; i++) {").append(ENDWORD);
+                sb4Reader.append("\t\t\t");
+                appendGetValue(sb4Reader, fieldName, readMethod);
+                sb4Reader.append(".put(");
+                try {
+                    javaWriterBuilder(sb4Writer, sb4Reader, clazz, Class.forName(kt.getTypeName()), "", null, null, null, 3);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                sb4Reader.append(",");
+                try {
+                    javaWriterBuilder(sb4Writer, sb4Reader, clazz, Class.forName(vt.getTypeName()), "", null, null, null, 3);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                sb4Reader.append(");").append(ENDWORD);
+                sb4Reader.append("\t\t}}").append(ENDWORD);
+//                short size = DeseriUtil.getShort(is);
+//                for (int i = 0; i < size; i++) {
+//                    o.getMap1().put(DeseriUtil.getXXX(is), DeseriUtil.getXXX(is));
 //                }
-//            } else {
-//                throw new RuntimeException("未指定泛型类型或多个泛型类型:" + propertyType);
-//            }
+
+                return;
+            } else {
+                throw new RuntimeException("未指定泛型类型或多个泛型类型:" + propertyType);
+            }
         }
-        // TODO 暂时不考虑数组情况
+        // TODO 暂时不考虑数组情况,所有数组用List代替
         //else if (propertyType.isArray()) {
         //    System.out.println("数组:" + propertyType);
         //    Class<?> componentType = propertyType.getComponentType();
@@ -359,7 +500,18 @@ public class SeriWriterUtil {
         //    }
         //}
         else {
-            sb4Writer.append("\t\t").append(propertyType.getSimpleName()).append("Writer.write(os, ");
+//            if (mapKV == 1) {
+//                sb4Writer.append("\t\tSeriUtil.putDate(os, entry.getKey());").append(ENDWORD);
+//                return;
+//            } else if (mapKV == 2) {
+//                sb4Writer.append("\t\tSeriUtil.putDate(os, entry.getValue());").append(ENDWORD);
+//                return;
+//            } else if (mapKV == 3) {
+//                sb4Reader.append(propertyType.getSimpleName()).append("Reader.read(is)");
+//                return;
+//            } else {
+                sb4Writer.append("\t\t").append(propertyType.getSimpleName()).append("Writer.write(os, ");
+//            }
 
             sb4Reader.append("\t\to.").append(writeMethodName).append("(");
             sb4Reader.append(propertyType.getSimpleName()).append("Reader.read(is)");
@@ -379,7 +531,7 @@ public class SeriWriterUtil {
     }
 
     public static void main(String[] args) throws Exception {
-        javaWriterBuilder(Player.class);
+        //javaWriterBuilder(Player.class);
         javaWriterBuilder(User.class);
     }
 }
