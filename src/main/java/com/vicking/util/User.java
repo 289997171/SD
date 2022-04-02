@@ -40,29 +40,30 @@ public class User {
         o.getList2().add(3);
         o.getList2().add(4);
 
-//        ByteBuffer buffer = ByteBuffer.allocate(1024);
-//        buffer.putInt(user.getId());
-//        putString(buffer, user.getName());
         ByteArrayOutputStream os = new ByteArrayOutputStream(1024);
-        SeriUtil.putInt(os, o.getId());
-        SeriUtil.putString(os, o.getName());
-        SeriUtil.putStringCol(os, o.getList1());
-        SeriUtil.putIntCol(os, o.getList2());
+        UserWriter.write(os, o);
+        System.out.println(os.size());
 
-        System.out.println("-----------");
-
-        User user1 = new User();
-        ByteInputStream is = new ByteInputStream(os.toByteArray(), 0, os.size());
-        System.out.println(DeseriUtil.getInt(is));
-        System.out.println(DeseriUtil.getString(is));
-
-        for (String s : DeseriUtil.getStringCol(is)) {
-            System.out.println(s);
-        }
-
-        for (Integer s : DeseriUtil.getIntCol(is)) {
-            System.out.println(s);
-        }
+//        ByteArrayOutputStream os = new ByteArrayOutputStream(1024);
+//        SeriUtil.putInt(os, o.getId());
+//        SeriUtil.putString(os, o.getName());
+//        SeriUtil.putStringCol(os, o.getList1());
+//        SeriUtil.putIntCol(os, o.getList2());
+//
+//        System.out.println("-----------");
+//
+//        User user1 = new User();
+//        ByteInputStream is = new ByteInputStream(os.toByteArray(), 0, os.size());
+//        System.out.println(DeseriUtil.getInt(is));
+//        System.out.println(DeseriUtil.getString(is));
+//
+//        for (String s : DeseriUtil.getStringCol(is)) {
+//            System.out.println(s);
+//        }
+//
+//        for (Integer s : DeseriUtil.getIntCol(is)) {
+//            System.out.println(s);
+//        }
 
 
     }

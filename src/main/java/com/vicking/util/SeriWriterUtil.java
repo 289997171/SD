@@ -137,6 +137,11 @@ public class SeriWriterUtil {
         sb4Writer.append("import java.io.OutputStream;").append(ENDWORD);
         sb4Writer.append("public class ").append(simpleName).append("Writer {").append(ENDWORD);
         sb4Writer.append("\tpublic static void write(OutputStream os,").append(simpleName).append(" o) throws IOException {").append(ENDWORD);
+        sb4Writer.append("\t\tif (o == null) {").append(ENDWORD);
+        sb4Writer.append("\t\t\tSeriUtil.putShort(os, 0);").append(ENDWORD);
+        sb4Writer.append("\t\t\treturn;").append(ENDWORD);
+        sb4Writer.append("\t\t}").append(ENDWORD);
+
 
         StringBuilder sb4Reader = new StringBuilder();
         sb4Reader.append("package ").append(clazz.getPackage().getName()).append(";").append(ENDWORD);
@@ -144,12 +149,14 @@ public class SeriWriterUtil {
         sb4Reader.append("import java.io.InputStream;").append(ENDWORD);
         sb4Reader.append("public class ").append(simpleName).append("Reader {").append(ENDWORD);
         sb4Reader.append("\tpublic static ").append(simpleName).append(" read(InputStream is) throws IOException {").append(ENDWORD);
+        sb4Reader.append("\t\tif(DeseriUtil.getShort(is) == 0) return null;").append(ENDWORD);
         sb4Reader.append("\t\t").append(simpleName).append(" o = new ").append(simpleName).append("();").append(ENDWORD);
 
         for (FieldInfo field : fields) {
             javaWriterBuilder(sb4Writer, sb4Reader, clazz, field);
         }
 
+        sb4Reader.append("\t\treturn o;").append(ENDWORD);
         sb4Reader.append("\t}").append(ENDWORD);
         sb4Reader.append("}");
 
@@ -202,22 +209,30 @@ public class SeriWriterUtil {
                 if (actualTypeArgument == Short.class) {
                     sb4Writer.append("\t\tSeriUtil.putShortCol(os, ");
 
-                    sb4Reader.append("\t\to.addAll(");
+                    sb4Reader.append("\t\t");
+                    appendGetValue(sb4Reader, fieldInfo);
+                    sb4Reader.append(".addAll(");
                     sb4Reader.append("DeseriUtil.getShortCol(is));").append(ENDWORD);
                 } else if (actualTypeArgument == Integer.class) {
                     sb4Writer.append("\t\tSeriUtil.putIntCol(os, ");
 
-                    sb4Reader.append("\t\to.addAll(");
+                    sb4Reader.append("\t\t");
+                    appendGetValue(sb4Reader, fieldInfo);
+                    sb4Reader.append(".addAll(");
                     sb4Reader.append("DeseriUtil.getIntCol(is));").append(ENDWORD);
                 } else if (actualTypeArgument == Long.class) {
                     sb4Writer.append("\t\tSeriUtil.putLongCol(os, ");
 
-                    sb4Reader.append("\t\to.addAll(");
+                    sb4Reader.append("\t\t");
+                    appendGetValue(sb4Reader, fieldInfo);
+                    sb4Reader.append(".addAll(");
                     sb4Reader.append("DeseriUtil.getLongCol(is));").append(ENDWORD);
                 } else if (actualTypeArgument == String.class) {
                     sb4Writer.append("\t\tSeriUtil.putStringCol(os, ");
 
-                    sb4Reader.append("\t\to.addAll(");
+                    sb4Reader.append("\t\t");
+                    appendGetValue(sb4Reader, fieldInfo);
+                    sb4Reader.append(".addAll(");
                     sb4Reader.append("DeseriUtil.getStringCol(is));").append(ENDWORD);
                 } else {
                     //throw new RuntimeException("未处理类型:" + actualTypeArgument);
@@ -239,7 +254,7 @@ public class SeriWriterUtil {
                     sb4Reader.append("\t\t\t");
                     appendGetValue(sb4Reader, fieldInfo);
                     sb4Reader.append(".add(");
-                    sb4Reader.append(actualTypeArgument.getTypeName()).append("Writer.write(is)").append(ENDWORD);
+                    sb4Reader.append(actualTypeArgument.getTypeName()).append("Reader.read(is));").append(ENDWORD);
                     sb4Reader.append("\t\t}").append(ENDWORD);
 
                     return;
