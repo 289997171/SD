@@ -8,10 +8,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 public class SeriWriterUtil {
@@ -191,60 +188,70 @@ public class SeriWriterUtil {
 
 
     public static void javaWriterBuilder(StringBuilder sb4Writer,StringBuilder sb4Reader, Class<?> clazz, FieldInfo fieldInfo) {
-
-
-
         Class<?> propertyType = fieldInfo.pd.getPropertyType();
+        String fieldName = fieldInfo.field.getName();
+        String writeMethodName = fieldInfo.writeMethod.getName();
+        Method readMethod = fieldInfo.readMethod;
+        ParameterizedType parameterizedType = null;
+        try {
+            parameterizedType = (ParameterizedType) fieldInfo.field.getGenericType();
+        } catch (ClassCastException e) {}
+
+        javaWriterBuilder(sb4Writer, sb4Reader, clazz, propertyType, fieldName, writeMethodName, readMethod, parameterizedType);
+    }
+    public static void javaWriterBuilder(StringBuilder sb4Writer,StringBuilder sb4Reader, Class<?> clazz,
+                                         Class<?> propertyType, String fieldName, String writeMethodName, Method readMethod, ParameterizedType parameterizedType
+    ) {
+
         if (propertyType == Date.class) {
             sb4Writer.append("\t\tSeriUtil.putDate(os, ");
 
-            sb4Reader.append("\t\to.").append(fieldInfo.writeMethod.getName()).append("(");
+            sb4Reader.append("\t\to.").append(writeMethodName).append("(");
             sb4Reader.append("DeseriUtil.getDate(is)");
             sb4Reader.append(");").append(ENDWORD);
         } else if (propertyType == double.class || propertyType == Double.class) {
             sb4Writer.append("\t\tSeriUtil.putDouble(os, ");
 
-            sb4Reader.append("\t\to.").append(fieldInfo.writeMethod.getName()).append("(");
+            sb4Reader.append("\t\to.").append(writeMethodName).append("(");
             sb4Reader.append("DeseriUtil.getDouble(is)");
             sb4Reader.append(");").append(ENDWORD);
         } else if (propertyType == float.class || propertyType == Float.class) {
             sb4Writer.append("\t\tSeriUtil.putFloat(os, ");
 
-            sb4Reader.append("\t\to.").append(fieldInfo.writeMethod.getName()).append("(");
+            sb4Reader.append("\t\to.").append(writeMethodName).append("(");
             sb4Reader.append("DeseriUtil.getFloat(is)");
             sb4Reader.append(");").append(ENDWORD);
         } else if (propertyType == byte.class || propertyType == Byte.class) {
             sb4Writer.append("\t\tSeriUtil.put(os, ");
 
-            sb4Reader.append("\t\to.").append(fieldInfo.writeMethod.getName()).append("(");
+            sb4Reader.append("\t\to.").append(writeMethodName).append("(");
             sb4Reader.append("(byte)DeseriUtil.get(is)");
             sb4Reader.append(");").append(ENDWORD);
         } else if (propertyType == short.class || propertyType == Short.class) {
             sb4Writer.append("\t\tSeriUtil.putShort(os, ");
 
-            sb4Reader.append("\t\to.").append(fieldInfo.writeMethod.getName()).append("(");
+            sb4Reader.append("\t\to.").append(writeMethodName).append("(");
             sb4Reader.append("DeseriUtil.getShort(is)");
             sb4Reader.append(");").append(ENDWORD);
         } else if (propertyType == int.class || propertyType == Integer.class) {
             sb4Writer.append("\t\tSeriUtil.putInt(os, ");
 
-            sb4Reader.append("\t\to.").append(fieldInfo.writeMethod.getName()).append("(");
+            sb4Reader.append("\t\to.").append(writeMethodName).append("(");
             sb4Reader.append("DeseriUtil.getInt(is)");
             sb4Reader.append(");").append(ENDWORD);
         } else if (propertyType == long.class || propertyType == Long.class) {
             sb4Writer.append("\t\tSeriUtil.putLong(os, ");
 
-            sb4Reader.append("\t\to.").append(fieldInfo.writeMethod.getName()).append("(");
+            sb4Reader.append("\t\to.").append(writeMethodName).append("(");
             sb4Reader.append("DeseriUtil.getLong(is)");
             sb4Reader.append(");").append(ENDWORD);
         } else if (propertyType == String.class) {
             sb4Writer.append("\t\tSeriUtil.putString(os, ");
 
-            sb4Reader.append("\t\to.").append(fieldInfo.writeMethod.getName()).append("(");
+            sb4Reader.append("\t\to.").append(writeMethodName).append("(");
             sb4Reader.append("DeseriUtil.getString(is)");
             sb4Reader.append(");").append(ENDWORD);
         } else if (Collection.class.isAssignableFrom(propertyType)) {
-            ParameterizedType parameterizedType = (ParameterizedType) fieldInfo.field.getGenericType();
             Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
             if (actualTypeArguments.length == 1) {
                 Type actualTypeArgument = actualTypeArguments[0];
@@ -254,47 +261,47 @@ public class SeriWriterUtil {
 
 
 
-                    sb4Reader.append("\t\tCollection<Short> ").append(fieldInfo.field.getName()).append(" = DeseriUtil.getShortCol(is);").append(ENDWORD);
-                    sb4Reader.append("\t\tif(").append(fieldInfo.field.getName()).append(" != null) ");
-                    appendGetValue(sb4Reader, fieldInfo);
+                    sb4Reader.append("\t\tCollection<Short> ").append(fieldName).append(" = DeseriUtil.getShortCol(is);").append(ENDWORD);
+                    sb4Reader.append("\t\tif(").append(fieldName).append(" != null) ");
+                    appendGetValue(sb4Reader, fieldName, readMethod);
                     sb4Reader.append(".addAll(");
-                    sb4Reader.append(fieldInfo.field.getName()).append(");").append(ENDWORD);
+                    sb4Reader.append(fieldName).append(");").append(ENDWORD);
                 } else if (actualTypeArgument == Integer.class) {
                     sb4Writer.append("\t\tSeriUtil.putIntCol(os, ");
 
 
-                    sb4Reader.append("\t\tCollection<Integer> ").append(fieldInfo.field.getName()).append(" = DeseriUtil.getIntCol(is);").append(ENDWORD);
-                    sb4Reader.append("\t\tif(").append(fieldInfo.field.getName()).append(" != null) ");
-                    appendGetValue(sb4Reader, fieldInfo);
+                    sb4Reader.append("\t\tCollection<Integer> ").append(fieldName).append(" = DeseriUtil.getIntCol(is);").append(ENDWORD);
+                    sb4Reader.append("\t\tif(").append(fieldName).append(" != null) ");
+                    appendGetValue(sb4Reader, fieldName, readMethod);
                     sb4Reader.append(".addAll(");
-                    sb4Reader.append(fieldInfo.field.getName()).append(");").append(ENDWORD);
+                    sb4Reader.append(fieldName).append(");").append(ENDWORD);
                 } else if (actualTypeArgument == Long.class) {
                     sb4Writer.append("\t\tSeriUtil.putLongCol(os, ");
 
-                    sb4Reader.append("\t\tCollection<Long> ").append(fieldInfo.field.getName()).append(" = DeseriUtil.getLongCol(is);").append(ENDWORD);
-                    sb4Reader.append("\t\tif(").append(fieldInfo.field.getName()).append(" != null) ");
-                    appendGetValue(sb4Reader, fieldInfo);
+                    sb4Reader.append("\t\tCollection<Long> ").append(fieldName).append(" = DeseriUtil.getLongCol(is);").append(ENDWORD);
+                    sb4Reader.append("\t\tif(").append(fieldName).append(" != null) ");
+                    appendGetValue(sb4Reader, fieldName, readMethod);
                     sb4Reader.append(".addAll(");
-                    sb4Reader.append(fieldInfo.field.getName()).append(");").append(ENDWORD);
+                    sb4Reader.append(fieldName).append(");").append(ENDWORD);
                 } else if (actualTypeArgument == String.class) {
                     sb4Writer.append("\t\tSeriUtil.putStringCol(os, ");
 
-                    sb4Reader.append("\t\tCollection<String> ").append(fieldInfo.field.getName()).append(" = DeseriUtil.getStringCol(is);").append(ENDWORD);
-                    sb4Reader.append("\t\tif(").append(fieldInfo.field.getName()).append(" != null) ");
-                    appendGetValue(sb4Reader, fieldInfo);
+                    sb4Reader.append("\t\tCollection<String> ").append(fieldName).append(" = DeseriUtil.getStringCol(is);").append(ENDWORD);
+                    sb4Reader.append("\t\tif(").append(fieldName).append(" != null) ");
+                    appendGetValue(sb4Reader, fieldName, readMethod);
                     sb4Reader.append(".addAll(");
-                    sb4Reader.append(fieldInfo.field.getName()).append(");").append(ENDWORD);
+                    sb4Reader.append(fieldName).append(");").append(ENDWORD);
                 } else {
                     //throw new RuntimeException("未处理类型:" + actualTypeArgument);
                     sb4Writer.append("\t\tSeriUtil.putShort(os, (short)");
-                    if (fieldInfo.readMethod == null) {
-                        sb4Writer.append("o.").append(fieldInfo.field.getName()).append(".size());").append(ENDWORD);
+                    if (readMethod == null) {
+                        sb4Writer.append("o.").append(fieldName).append(".size());").append(ENDWORD);
                     } else {
-                        sb4Writer.append("o.").append(fieldInfo.readMethod.getName()).append("()").append(".size());").append(ENDWORD);
+                        sb4Writer.append("o.").append(readMethod.getName()).append("()").append(".size());").append(ENDWORD);
                     }
 
                     sb4Writer.append("\t\tfor (").append(actualTypeArgument.getTypeName()).append(" item : ");
-                    appendGetValue(sb4Writer, fieldInfo);
+                    appendGetValue(sb4Writer, fieldName, readMethod);
                     sb4Writer.append(") {").append(ENDWORD);
                         sb4Writer.append("\t\t\t").append(actualTypeArgument.getTypeName()).append("Writer.write(os, item);").append(ENDWORD);
                     sb4Writer.append("\t\t}").append(ENDWORD);
@@ -304,7 +311,7 @@ public class SeriWriterUtil {
                     sb4Reader.append("\t\t{short size = DeseriUtil.getShort(is);").append(ENDWORD);
                     sb4Reader.append("\t\tfor (int i = 0; i < size; i++) {").append(ENDWORD);
                     sb4Reader.append("\t\t\t");
-                    appendGetValue(sb4Reader, fieldInfo);
+                    appendGetValue(sb4Reader, fieldName, readMethod);
                     sb4Reader.append(".add(");
                     sb4Reader.append(actualTypeArgument.getTypeName()).append("Reader.read(is));").append(ENDWORD);
                     sb4Reader.append("\t\t}}").append(ENDWORD);
@@ -317,6 +324,23 @@ public class SeriWriterUtil {
             } else {
                 throw new RuntimeException("未指定泛型类型或多个泛型类型:" + propertyType);
             }
+        } else if (Map.class.isAssignableFrom(propertyType)) {
+            log.info("Map");
+//            Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
+//            System.out.println(actualTypeArguments.length);
+//            if (actualTypeArguments.length == 2) {
+//                Type kt = actualTypeArguments[0];
+//                Type vt = actualTypeArguments[1];
+//                // 写入数量
+//                sb4Writer.append("\t\tSeriUtil.putShort(os, (short)");
+//                if (readMethod == null) {
+//                    sb4Writer.append("o.").append(fieldName).append(".size());").append(ENDWORD);
+//                } else {
+//                    sb4Writer.append("o.").append(readMethod.getName()).append("()").append(".size());").append(ENDWORD);
+//                }
+//            } else {
+//                throw new RuntimeException("未指定泛型类型或多个泛型类型:" + propertyType);
+//            }
         }
         // TODO 暂时不考虑数组情况
         //else if (propertyType.isArray()) {
@@ -337,20 +361,20 @@ public class SeriWriterUtil {
         else {
             sb4Writer.append("\t\t").append(propertyType.getSimpleName()).append("Writer.write(os, ");
 
-            sb4Reader.append("\t\to.").append(fieldInfo.writeMethod.getName()).append("(");
+            sb4Reader.append("\t\to.").append(writeMethodName).append("(");
             sb4Reader.append(propertyType.getSimpleName()).append("Reader.read(is)");
             sb4Reader.append(");").append(ENDWORD);
         }
 
-        appendGetValue(sb4Writer, fieldInfo);
+        appendGetValue(sb4Writer, fieldName, readMethod);
         sb4Writer.append(");").append(ENDWORD);
     }
 
-    private static void appendGetValue(StringBuilder sb, FieldInfo fieldInfo) {
-        if (fieldInfo.readMethod == null) {
-            sb.append("o.").append(fieldInfo.field.getName());
+    private static void appendGetValue(StringBuilder sb, String fieldName, Method readMethod) {
+        if (readMethod == null) {
+            sb.append("o.").append(fieldName);
         } else {
-            sb.append("o.").append(fieldInfo.readMethod.getName()).append("()");
+            sb.append("o.").append(readMethod.getName()).append("()");
         }
     }
 

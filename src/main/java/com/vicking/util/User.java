@@ -8,6 +8,7 @@ import lombok.ToString;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -35,6 +36,8 @@ public class User {
     private float f = 123.456f;
     private double d = 1232456.182377897;
     private Date date = new Date();
+
+//    private Map<Integer, String> map1 = new HashMap<>();
 
 
     public static void main(String[] args) throws IOException {
