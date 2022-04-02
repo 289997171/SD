@@ -18,11 +18,10 @@ public class UserReader {
 		Collection<Long> list4 = DeseriUtil.getLongCol(is);
 		if(list4 != null) o.getList4().addAll(list4);
 		o.setPlayer(PlayerReader.read(is));
-		short size = DeseriUtil.getShort(is);
+		{short size = DeseriUtil.getShort(is);
 		for (int i = 0; i < size; i++) {
-			System.out.println("xxxx");
 			o.getPlayers().add(PlayerReader.read(is));
-		}
+		}}
 		return o;
 	}
 }

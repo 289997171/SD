@@ -274,12 +274,14 @@ public class SeriWriterUtil {
                     sb4Writer.append("\t\t}").append(ENDWORD);
 
 
-                    sb4Reader.append("\t\tfor (int i = 0; i < DeseriUtil.getShort(is); i++) {").append(ENDWORD);
+                    // TODO 有个奇怪的BUG,不能将DeseriUtil.getShort(is) 反在循环体中 short size = DeseriUtil.getShort(is);
+                    sb4Reader.append("\t\t{short size = DeseriUtil.getShort(is);").append(ENDWORD);
+                    sb4Reader.append("\t\tfor (int i = 0; i < size; i++) {").append(ENDWORD);
                     sb4Reader.append("\t\t\t");
                     appendGetValue(sb4Reader, fieldInfo);
                     sb4Reader.append(".add(");
                     sb4Reader.append(actualTypeArgument.getTypeName()).append("Reader.read(is));").append(ENDWORD);
-                    sb4Reader.append("\t\t}").append(ENDWORD);
+                    sb4Reader.append("\t\t}}").append(ENDWORD);
 
                     return;
 //                    for (actualTypeArgument.getName item : ) {
