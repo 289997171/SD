@@ -141,6 +141,7 @@ public class SeriWriterUtil {
         sb4Writer.append("\t\t\tSeriUtil.putShort(os, 0);").append(ENDWORD);
         sb4Writer.append("\t\t\treturn;").append(ENDWORD);
         sb4Writer.append("\t\t}").append(ENDWORD);
+        sb4Writer.append("\t\tSeriUtil.putShort(os, 1);").append(ENDWORD);
 
 
         StringBuilder sb4Reader = new StringBuilder();
