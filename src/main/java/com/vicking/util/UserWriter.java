@@ -12,6 +12,8 @@ public class UserWriter {
 		SeriUtil.putString(os, o.getName());
 		SeriUtil.putStringCol(os, o.getList1());
 		SeriUtil.putIntCol(os, o.getList2());
+		SeriUtil.putShortCol(os, o.getList3());
+		SeriUtil.putLongCol(os, o.getList4());
 		PlayerWriter.write(os, o.getPlayer());
 		SeriUtil.putShort(os, (short)o.getPlayers().size());
 		for (Player item : o.getPlayers()) {

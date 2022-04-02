@@ -3,12 +3,14 @@ package com.vicking.util;
 import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.*;
 
+@ToString
 @Getter @Setter
 public class User {
     private final int msgId = 1;
@@ -19,6 +21,8 @@ public class User {
 
     private List<String> list1 = new ArrayList<>();
     private Set<Integer> list2 = new HashSet<>();
+    private List<Short> list3 = new ArrayList<>();
+    private Set<Long> list4 = new HashSet<>();
 
 
     private Player player;
@@ -40,6 +44,18 @@ public class User {
         o.getList2().add(2);
         o.getList2().add(3);
         o.getList2().add(4);
+
+        Player player = new Player();
+        player.setId(110);
+        player.setName("P110");
+        o.setPlayer(player);
+
+        for(int i =0; i < 3; i++){
+            Player item = new Player();
+            item.setId(111 + i);
+            item.setName("P" + item.getId());
+            o.getPlayers().add(item);
+        }
 
         ByteArrayOutputStream os = new ByteArrayOutputStream(1024);
         UserWriter.write(os, o);
