@@ -8,6 +8,7 @@ import lombok.ToString;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @ToString
@@ -28,6 +29,12 @@ public class User {
     private Player player;
 
     private Set<Player> players = new HashSet<>();
+
+    private byte b = 110;
+    private short s = 123;
+    private float f = 123.456f;
+    private double d = 1232456.182377897;
+    private Date date = new Date();
 
 
     public static void main(String[] args) throws IOException {

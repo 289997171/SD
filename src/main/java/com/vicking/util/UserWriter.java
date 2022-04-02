@@ -19,5 +19,10 @@ public class UserWriter {
 		for (Player item : o.getPlayers()) {
 			PlayerWriter.write(os, item);
 		}
+		SeriUtil.put(os, o.getB());
+		SeriUtil.putShort(os, o.getS());
+		SeriUtil.putFloat(os, o.getF());
+		SeriUtil.putDouble(os, o.getD());
+		SeriUtil.putDate(os, o.getDate());
 	}
 }

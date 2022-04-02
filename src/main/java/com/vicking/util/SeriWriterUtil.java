@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -194,7 +195,31 @@ public class SeriWriterUtil {
 
 
         Class<?> propertyType = fieldInfo.pd.getPropertyType();
-        if (propertyType == short.class || propertyType == Short.class) {
+        if (propertyType == Date.class) {
+            sb4Writer.append("\t\tSeriUtil.putDate(os, ");
+
+            sb4Reader.append("\t\to.").append(fieldInfo.writeMethod.getName()).append("(");
+            sb4Reader.append("DeseriUtil.getDate(is)");
+            sb4Reader.append(");").append(ENDWORD);
+        } else if (propertyType == double.class || propertyType == Double.class) {
+            sb4Writer.append("\t\tSeriUtil.putDouble(os, ");
+
+            sb4Reader.append("\t\to.").append(fieldInfo.writeMethod.getName()).append("(");
+            sb4Reader.append("DeseriUtil.getDouble(is)");
+            sb4Reader.append(");").append(ENDWORD);
+        } else if (propertyType == float.class || propertyType == Float.class) {
+            sb4Writer.append("\t\tSeriUtil.putFloat(os, ");
+
+            sb4Reader.append("\t\to.").append(fieldInfo.writeMethod.getName()).append("(");
+            sb4Reader.append("DeseriUtil.getFloat(is)");
+            sb4Reader.append(");").append(ENDWORD);
+        } else if (propertyType == byte.class || propertyType == Byte.class) {
+            sb4Writer.append("\t\tSeriUtil.put(os, ");
+
+            sb4Reader.append("\t\to.").append(fieldInfo.writeMethod.getName()).append("(");
+            sb4Reader.append("(byte)DeseriUtil.get(is)");
+            sb4Reader.append(");").append(ENDWORD);
+        } else if (propertyType == short.class || propertyType == Short.class) {
             sb4Writer.append("\t\tSeriUtil.putShort(os, ");
 
             sb4Reader.append("\t\to.").append(fieldInfo.writeMethod.getName()).append("(");

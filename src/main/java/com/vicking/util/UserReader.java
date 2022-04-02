@@ -21,6 +21,11 @@ public class UserReader {
 		for (int i = 0; i < size; i++) {
 			o.getPlayers().add(PlayerReader.read(is));
 		}}
+		o.setB((byte)DeseriUtil.get(is));
+		o.setS(DeseriUtil.getShort(is));
+		o.setF(DeseriUtil.getFloat(is));
+		o.setD(DeseriUtil.getDouble(is));
+		o.setDate(DeseriUtil.getDate(is));
 		return o;
 	}
 }
