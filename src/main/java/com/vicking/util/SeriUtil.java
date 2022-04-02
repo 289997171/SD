@@ -13,10 +13,24 @@ public class SeriUtil {
     public static void main(String[] args) throws IOException {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         putFloat(os, 123.456f);
+        putDouble(os, 12355.45677);
         ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
         System.out.println(DeseriUtil.getFloat(is));
+        System.out.println(DeseriUtil.getDouble(is));
 //        ByteBuffer buffer = null;
 //        buffer.getFloat();
+    }
+
+    public static void putDouble(OutputStream os, double x) throws IOException {
+        long v = Double.doubleToRawLongBits(x);
+        os.write((byte) (v >> 56));
+        os.write((byte) (v >> 48));
+        os.write((byte) (v >> 40));
+        os.write((byte) (v >> 32));
+        os.write((byte) (v >> 24));
+        os.write((byte) (v >> 16));
+        os.write((byte) (v >> 8));
+        os.write((byte) v);
     }
 
     public static void putFloat(OutputStream os, float x) throws IOException {

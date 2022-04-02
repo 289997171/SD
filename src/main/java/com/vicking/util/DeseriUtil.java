@@ -9,6 +9,18 @@ import java.util.Collection;
 
 public class DeseriUtil {
 
+    public static double getDouble(InputStream is) throws IOException {
+        long v =((((long) is.read()) << 56) |
+                (((long) is.read() & 0xff) << 48) |
+                (((long) is.read() & 0xff) << 40) |
+                (((long) is.read() & 0xff) << 32) |
+                (((long) is.read() & 0xff) << 24) |
+                (((long) is.read() & 0xff) << 16) |
+                (((long) is.read() & 0xff) << 8) |
+                (((long) is.read() & 0xff)));
+        return Double.longBitsToDouble(v);
+    }
+
     public static float getFloat(InputStream is) throws IOException {
         int v =(((is.read()) << 24) |
                 ((is.read() & 0xff) << 16) |
