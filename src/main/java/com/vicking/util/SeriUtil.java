@@ -11,10 +11,20 @@ import java.util.Collection;
 public class SeriUtil {
 
     public static void main(String[] args) throws IOException {
-//        ByteArrayOutputStream os = new ByteArrayOutputStream();
-//        putShort(os, (short)1001);
-//        ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
-//        System.out.println(DeseriUtil.getShort(is));
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        putFloat(os, 123.456f);
+        ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
+        System.out.println(DeseriUtil.getFloat(is));
+//        ByteBuffer buffer = null;
+//        buffer.getFloat();
+    }
+
+    public static void putFloat(OutputStream os, float x) throws IOException {
+        int v = Float.floatToRawIntBits(x);
+        os.write((byte) (v >> 24));
+        os.write((byte) (v >> 16));
+        os.write((byte) (v >> 8));
+        os.write((byte) v);
     }
 
     public static void put(OutputStream os, byte x) throws IOException {

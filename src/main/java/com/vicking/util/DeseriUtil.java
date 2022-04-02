@@ -2,11 +2,20 @@ package com.vicking.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 
 public class DeseriUtil {
+
+    public static float getFloat(InputStream is) throws IOException {
+        int v =(((is.read()) << 24) |
+                ((is.read() & 0xff) << 16) |
+                ((is.read() & 0xff) << 8) |
+                ((is.read() & 0xff)));
+        return Float.intBitsToFloat(v);
+    }
 
     public static int get(InputStream is) throws IOException {
         return is.read();
