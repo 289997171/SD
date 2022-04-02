@@ -6,8 +6,22 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 public class DeseriUtil {
+
+    public static Date getDate(InputStream is) throws IOException {
+        long v = (
+                //(((long) is.read()) << 56) |
+                //(((long) is.read() & 0xff) << 48) |
+                (((long) is.read() & 0xff) << 40) |
+                (((long) is.read() & 0xff) << 32) |
+                (((long) is.read() & 0xff) << 24) |
+                (((long) is.read() & 0xff) << 16) |
+                (((long) is.read() & 0xff) << 8) |
+                (((long) is.read() & 0xff)));
+        return new Date(v);
+    }
 
     public static double getDouble(InputStream is) throws IOException {
         long v =((((long) is.read()) << 56) |

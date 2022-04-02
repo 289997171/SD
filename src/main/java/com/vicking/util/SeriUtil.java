@@ -6,19 +6,37 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 
 public class SeriUtil {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ParseException {
+
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         putFloat(os, 123.456f);
         putDouble(os, 12355.45677);
+        putDate(os, new SimpleDateFormat("yyyy-MM-dd").parse("9527-03-28"));
         ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
         System.out.println(DeseriUtil.getFloat(is));
         System.out.println(DeseriUtil.getDouble(is));
+        System.out.println(DeseriUtil.getDate(is));
 //        ByteBuffer buffer = null;
 //        buffer.getFloat();
+    }
+
+    public static void putDate(OutputStream os, Date x) throws IOException {
+        long v = (long)x.getTime();
+        //os.write((byte) (v >> 56));
+        //os.write((byte) (v >> 48));
+        os.write((byte) (v >> 40));
+        os.write((byte) (v >> 32));
+        os.write((byte) (v >> 24));
+        os.write((byte) (v >> 16));
+        os.write((byte) (v >> 8));
+        os.write((byte) v);
     }
 
     public static void putDouble(OutputStream os, double x) throws IOException {
