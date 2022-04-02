@@ -2,10 +2,9 @@ package com.vicking.util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
-
 public class UserReader {
 	public static User read(InputStream is) throws IOException {
-		if(DeseriUtil.getShort(is) == 0) return null;
+		if(DeseriUtil.get(is) == 0) return null;
 		User o = new User();
 		o.setId(DeseriUtil.getInt(is));
 		o.setName(DeseriUtil.getString(is));

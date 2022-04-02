@@ -8,6 +8,10 @@ import java.util.Collection;
 
 public class DeseriUtil {
 
+    public static int get(InputStream is) throws IOException {
+        return is.read();
+    }
+
     public static short getShort(InputStream is) throws IOException {
         return (short) (((is.read() & 0xff) << 8) |
                 ((is.read() & 0xff)));

@@ -11,10 +11,14 @@ import java.util.Collection;
 public class SeriUtil {
 
     public static void main(String[] args) throws IOException {
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        putShort(os, (short)1001);
-        ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
-        System.out.println(DeseriUtil.getShort(is));
+//        ByteArrayOutputStream os = new ByteArrayOutputStream();
+//        putShort(os, (short)1001);
+//        ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
+//        System.out.println(DeseriUtil.getShort(is));
+    }
+
+    public static void put(OutputStream os, byte x) throws IOException {
+        os.write(x);
     }
 
     public static void putShort(OutputStream os, short x) throws IOException {

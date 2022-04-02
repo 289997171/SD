@@ -142,19 +142,20 @@ public class SeriWriterUtil {
         sb4Writer.append("public class ").append(simpleName).append("Writer {").append(ENDWORD);
         sb4Writer.append("\tpublic static void write(OutputStream os,").append(simpleName).append(" o) throws IOException {").append(ENDWORD);
         sb4Writer.append("\t\tif (o == null) {").append(ENDWORD);
-        sb4Writer.append("\t\t\tSeriUtil.putShort(os, 0);").append(ENDWORD);
+        sb4Writer.append("\t\t\tSeriUtil.put(os, (byte)0);").append(ENDWORD);
         sb4Writer.append("\t\t\treturn;").append(ENDWORD);
         sb4Writer.append("\t\t}").append(ENDWORD);
-        sb4Writer.append("\t\tSeriUtil.putShort(os, 1);").append(ENDWORD);
+        sb4Writer.append("\t\tSeriUtil.put(os, (byte)1);").append(ENDWORD);
 
 
         StringBuilder sb4Reader = new StringBuilder();
         sb4Reader.append("package ").append(clazz.getPackage().getName()).append(";").append(ENDWORD);
         sb4Reader.append("import java.io.IOException;").append(ENDWORD);
         sb4Reader.append("import java.io.InputStream;").append(ENDWORD);
+        sb4Reader.append("import java.util.Collection;").append(ENDWORD);
         sb4Reader.append("public class ").append(simpleName).append("Reader {").append(ENDWORD);
         sb4Reader.append("\tpublic static ").append(simpleName).append(" read(InputStream is) throws IOException {").append(ENDWORD);
-        sb4Reader.append("\t\tif(DeseriUtil.getShort(is) == 0) return null;").append(ENDWORD);
+        sb4Reader.append("\t\tif(DeseriUtil.get(is) == 0) return null;").append(ENDWORD);
         sb4Reader.append("\t\t").append(simpleName).append(" o = new ").append(simpleName).append("();").append(ENDWORD);
 
         for (FieldInfo field : fields) {

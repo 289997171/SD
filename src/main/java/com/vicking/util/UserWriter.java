@@ -4,10 +4,10 @@ import java.io.OutputStream;
 public class UserWriter {
 	public static void write(OutputStream os,User o) throws IOException {
 		if (o == null) {
-			SeriUtil.putShort(os, 0);
+			SeriUtil.put(os, (byte)0);
 			return;
 		}
-		SeriUtil.putShort(os, 1);
+		SeriUtil.put(os, (byte)1);
 		SeriUtil.putInt(os, o.getId());
 		SeriUtil.putString(os, o.getName());
 		SeriUtil.putStringCol(os, o.getList1());
