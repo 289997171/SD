@@ -4,6 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,6 +14,7 @@ import java.util.List;
 
 @Slf4j
 public class SeriWriterUtil {
+
     public static class FieldInfo {
         public Field field;
         public boolean isFinal; // 是否是final
@@ -166,6 +170,17 @@ public class SeriWriterUtil {
 
         System.out.println(sb4Writer.toString());
         System.out.println(sb4Reader.toString());
+
+        try {
+            FileWriter fileWriter1 = new FileWriter(new File("./" + simpleName+"Writer.java"));
+            fileWriter1.write(sb4Writer.toString());
+            fileWriter1.flush();
+            FileWriter fileWriter2 = new FileWriter(new File("./" + simpleName+"Reader.java"));
+            fileWriter2.write(sb4Reader.toString());
+            fileWriter2.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         return sb4Writer;
     }

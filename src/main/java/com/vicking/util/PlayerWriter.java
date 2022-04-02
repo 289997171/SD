@@ -7,6 +7,7 @@ public class PlayerWriter {
 			SeriUtil.putShort(os, 0);
 			return;
 		}
+		SeriUtil.putShort(os, 1);
 		SeriUtil.putInt(os, o.getId());
 		SeriUtil.putString(os, o.getName());
 	}
