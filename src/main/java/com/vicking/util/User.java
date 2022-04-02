@@ -4,6 +4,7 @@ import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.*;
@@ -43,6 +44,10 @@ public class User {
         ByteArrayOutputStream os = new ByteArrayOutputStream(1024);
         UserWriter.write(os, o);
         System.out.println(os.size());
+
+        ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
+        User read = UserReader.read(is);
+        System.out.println(read);
 
 //        ByteArrayOutputStream os = new ByteArrayOutputStream(1024);
 //        SeriUtil.putInt(os, o.getId());

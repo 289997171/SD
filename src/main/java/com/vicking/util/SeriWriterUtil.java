@@ -168,8 +168,8 @@ public class SeriWriterUtil {
         sb4Writer.append("\t}").append(ENDWORD);
         sb4Writer.append("}");
 
-        System.out.println(sb4Writer.toString());
-        System.out.println(sb4Reader.toString());
+//        System.out.println(sb4Writer.toString());
+//        System.out.println(sb4Reader.toString());
 
         try {
             FileWriter fileWriter1 = new FileWriter(new File("./" + simpleName+"Writer.java"));
@@ -225,31 +225,39 @@ public class SeriWriterUtil {
                 if (actualTypeArgument == Short.class) {
                     sb4Writer.append("\t\tSeriUtil.putShortCol(os, ");
 
-                    sb4Reader.append("\t\t");
+
+
+
+                    sb4Reader.append("\t\tCollection<Short> ").append(fieldInfo.field.getName()).append(" = DeseriUtil.getShortCol(is);").append(ENDWORD);
+                    sb4Reader.append("\t\tif(").append(fieldInfo.field.getName()).append(" != null) ");
                     appendGetValue(sb4Reader, fieldInfo);
                     sb4Reader.append(".addAll(");
-                    sb4Reader.append("DeseriUtil.getShortCol(is));").append(ENDWORD);
+                    sb4Reader.append(fieldInfo.field.getName()).append(");").append(ENDWORD);
                 } else if (actualTypeArgument == Integer.class) {
                     sb4Writer.append("\t\tSeriUtil.putIntCol(os, ");
 
-                    sb4Reader.append("\t\t");
+
+                    sb4Reader.append("\t\tCollection<Integer> ").append(fieldInfo.field.getName()).append(" = DeseriUtil.getIntCol(is);").append(ENDWORD);
+                    sb4Reader.append("\t\tif(").append(fieldInfo.field.getName()).append(" != null) ");
                     appendGetValue(sb4Reader, fieldInfo);
                     sb4Reader.append(".addAll(");
-                    sb4Reader.append("DeseriUtil.getIntCol(is));").append(ENDWORD);
+                    sb4Reader.append(fieldInfo.field.getName()).append(");").append(ENDWORD);
                 } else if (actualTypeArgument == Long.class) {
                     sb4Writer.append("\t\tSeriUtil.putLongCol(os, ");
 
-                    sb4Reader.append("\t\t");
+                    sb4Reader.append("\t\tCollection<Long> ").append(fieldInfo.field.getName()).append(" = DeseriUtil.getLongCol(is);").append(ENDWORD);
+                    sb4Reader.append("\t\tif(").append(fieldInfo.field.getName()).append(" != null) ");
                     appendGetValue(sb4Reader, fieldInfo);
                     sb4Reader.append(".addAll(");
-                    sb4Reader.append("DeseriUtil.getLongCol(is));").append(ENDWORD);
+                    sb4Reader.append(fieldInfo.field.getName()).append(");").append(ENDWORD);
                 } else if (actualTypeArgument == String.class) {
                     sb4Writer.append("\t\tSeriUtil.putStringCol(os, ");
 
-                    sb4Reader.append("\t\t");
+                    sb4Reader.append("\t\tCollection<String> ").append(fieldInfo.field.getName()).append(" = DeseriUtil.getStringCol(is);").append(ENDWORD);
+                    sb4Reader.append("\t\tif(").append(fieldInfo.field.getName()).append(" != null) ");
                     appendGetValue(sb4Reader, fieldInfo);
                     sb4Reader.append(".addAll(");
-                    sb4Reader.append("DeseriUtil.getStringCol(is));").append(ENDWORD);
+                    sb4Reader.append(fieldInfo.field.getName()).append(");").append(ENDWORD);
                 } else {
                     //throw new RuntimeException("未处理类型:" + actualTypeArgument);
                     sb4Writer.append("\t\tSeriUtil.putShort(os, (short)");
