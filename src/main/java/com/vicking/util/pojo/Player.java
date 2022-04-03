@@ -1,4 +1,4 @@
-package com.vicking.util;
+package com.vicking.util.pojo;
 
 import lombok.Getter;
 import lombok.Setter;

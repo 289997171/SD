@@ -1,4 +1,4 @@
-package com.vicking.util;
+package com.vicking.util.ann;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

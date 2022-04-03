@@ -2,13 +2,14 @@ package com.vicking.util;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 
 public class DeseriUtil {
+
+    public static boolean getBoolean(InputStream is) throws IOException {
+        return is.read() == (byte)1;
+    }
 
     public static Date getDate(InputStream is) throws IOException {
         long v = (
@@ -43,8 +44,8 @@ public class DeseriUtil {
         return Float.intBitsToFloat(v);
     }
 
-    public static int get(InputStream is) throws IOException {
-        return is.read();
+    public static byte get(InputStream is) throws IOException {
+        return (byte)is.read();
     }
 
     public static short getShort(InputStream is) throws IOException {
@@ -82,56 +83,5 @@ public class DeseriUtil {
         }
     }
 
-    public static Collection<Short> getShortCol(InputStream is) throws IOException {
-        int len = getShort(is);
-        if (len == 0) {
-            return null;
-        } else {
-            ArrayList<Short> list = new ArrayList<>();
-            for (int i = 0; i < len; i++) {
-                list.add(getShort(is));
-            }
-            return list;
-        }
-    }
-
-    public static Collection<Integer> getIntCol(InputStream is) throws IOException {
-        int len = getShort(is);
-        if (len == 0) {
-            return null;
-        } else {
-            ArrayList<Integer> list = new ArrayList<>();
-            for (int i = 0; i < len; i++) {
-                list.add(getInt(is));
-            }
-            return list;
-        }
-    }
-
-    public static Collection<Long> getLongCol(InputStream is) throws IOException {
-        int len = getShort(is);
-        if (len == 0) {
-            return null;
-        } else {
-            ArrayList<Long> list = new ArrayList<>();
-            for (int i = 0; i < len; i++) {
-                list.add(getLong(is));
-            }
-            return list;
-        }
-    }
-
-    public static Collection<String> getStringCol(InputStream is) throws IOException {
-        int len = getShort(is);
-        if (len == 0) {
-            return null;
-        } else {
-            ArrayList<String> list = new ArrayList<>();
-            for (int i = 0; i < len; i++) {
-                list.add(getString(is));
-            }
-            return list;
-        }
-    }
 
 }

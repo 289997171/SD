@@ -8,6 +8,14 @@ import java.util.Date;
 
 public class SeriUtil {
 
+    public static void putBoolean(OutputStream os, boolean x) throws IOException {
+        if (x) {
+            os.write((byte)1);
+        } else {
+            os.write((byte)0);
+        }
+    }
+
     public static void putDate(OutputStream os, Date x) throws IOException {
         long v = (long)x.getTime();
         //os.write((byte) (v >> 56));
@@ -32,16 +40,16 @@ public class SeriUtil {
         os.write((byte) v);
     }
 
+    public static void put(OutputStream os, byte x) throws IOException {
+        os.write(x);
+    }
+
     public static void putFloat(OutputStream os, float x) throws IOException {
         int v = Float.floatToRawIntBits(x);
         os.write((byte) (v >> 24));
         os.write((byte) (v >> 16));
         os.write((byte) (v >> 8));
         os.write((byte) v);
-    }
-
-    public static void put(OutputStream os, byte x) throws IOException {
-        os.write(x);
     }
 
     public static void putShort(OutputStream os, short x) throws IOException {
@@ -79,17 +87,6 @@ public class SeriUtil {
             byte[] bytes = s.getBytes(StandardCharsets.UTF_8);
             putShort(os, (short)bytes.length);
             os.write(bytes);
-        }
-    }
-
-    public static void putShorts(OutputStream os, Collection<Short> collection) throws IOException {
-        if (collection == null) {
-            putShort(os, (short)0);
-        } else {
-            putShort(os, (short)collection.size());
-            for (short o : collection) {
-                putShort(os, o);
-            }
         }
     }
 

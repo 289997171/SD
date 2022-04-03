@@ -1,15 +1,10 @@
-package com.vicking.util;
+package com.vicking.util.pojo;
 
-import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @ToString

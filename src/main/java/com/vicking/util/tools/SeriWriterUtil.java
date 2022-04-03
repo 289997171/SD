@@ -1,14 +1,10 @@
-package com.vicking.util;
+package com.vicking.util.tools;
 
-import cn.hutool.core.lang.hash.Hash;
+import com.vicking.util.ann.SD_NO;
 import lombok.extern.slf4j.Slf4j;
-import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.lang.reflect.*;
 import java.util.*;
 
@@ -21,7 +17,7 @@ public class SeriWriterUtil {
         public Method readMethod; // get is 函数
         public Method writeMethod;// set 函数
         public Object value; // 默认值
-        public PropertyDescriptor pd;
+        public PropertyDescriptor propertyDescriptor;
 
         @Override
         public String toString() {
@@ -80,7 +76,7 @@ public class SeriWriterUtil {
                     if (readMethod != null && writeMethod != null) {
                         //System.out.println("readMethod ; " + readMethod);
                         FieldInfo fieldInfo = getFieldInfo(allField, readMethod, writeMethod, instance);
-                        fieldInfo.pd = pd;
+                        fieldInfo.propertyDescriptor = pd;
                         needSD.add(fieldInfo);
                     } else {
                         System.out.println(allField.getName() + " 没有read write函数1");
@@ -191,7 +187,7 @@ public class SeriWriterUtil {
 
 
     public static void javaWriterBuilder(StringBuilder sb4Writer,StringBuilder sb4Reader, Class<?> clazz, FieldInfo fieldInfo) {
-        Class<?> propertyType = fieldInfo.pd.getPropertyType();
+        Class<?> propertyType = fieldInfo.propertyDescriptor.getPropertyType();
         String fieldName = fieldInfo.field.getName();
         String writeMethodName = fieldInfo.writeMethod.getName();
         Method readMethod = fieldInfo.readMethod;

@@ -2,6 +2,10 @@ package com.vicking.util;
 
 public class SeriUtilBuilder {
 
+    public static String putBoolean(String value) {
+        return String.format("SeriUtil.putBoolean(os, %s);", value);
+    }
+
     public static String putDate(String value) {
         return String.format("SeriUtil.putDate(os, %s);", value);
     }
