@@ -3,40 +3,40 @@ package com.vicking.util;
 public class DeseriUtilBuilder {
 
     public static String getBoolean(String value) {
-        return String.format("DeseriUtil.getBoolean(is, %s);", value);
+        return String.format(value, "DeseriUtil.getBoolean(is)");
     }
 
     public static  String getDate(String value) {
-        return String.format("DeseriUtil.getDate(is, %s);", value);
+        return String.format(value, "DeseriUtil.getDate(is)");
     }
 
     public static String getDouble(String value) {
-        return String.format("DeseriUtil.getDouble(is, %s);", value);
+        return String.format(value, "DeseriUtil.getDouble(is)");
     }
 
     public static String getFloat(String value) {
-        return String.format("DeseriUtil.getFloat(is, %s);", value);
+        return String.format(value, "DeseriUtil.getFloat(is)");
     }
 
-    public static String get(String value) {
-        return String.format("DeseriUtil.get(is, %s);", value);
+    public static String getByte(String value) {
+        return String.format(value, "DeseriUtil.getByte(is)");
     }
 
     public static String getShort(String value) {
-        return String.format("DeseriUtil.getShort(is, %s);", value);
+        return String.format(value, "DeseriUtil.getShort(is)");
     }
 
     public static String getInt(String value) {
-        return String.format("DeseriUtil.getInt(is, %s);", value);
+        return String.format(value, "DeseriUtil.getInt(is)");
     }
 
 
     public static String getLong(String value) {
-        return String.format("DeseriUtil.getLong(is, %s);", value);
+        return String.format(value, "DeseriUtil.getLong(is)");
     }
 
     public static String getString(String value) {
-        return String.format("DeseriUtil.getString(is, %s);", value);
+        return String.format(value, "DeseriUtil.getString(is)");
     }
 
 

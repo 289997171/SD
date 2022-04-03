@@ -54,7 +54,7 @@ public class SDFieldWriteBuilder {
         } else if (propertyType == float.class || propertyType == Float.class) {
             return SeriUtilBuilder.putFloat(getValueStr);
         } else if (propertyType == byte.class || propertyType == Byte.class) {
-            return SeriUtilBuilder.put(getValueStr);
+            return SeriUtilBuilder.putByte(getValueStr);
         } else if (propertyType == short.class || propertyType == Short.class) {
             return SeriUtilBuilder.putShort(getValueStr);
         }else if (propertyType == int.class || propertyType == Integer.class) {

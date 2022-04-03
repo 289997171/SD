@@ -22,7 +22,7 @@ public class SDFieldReadBuilder {
     public static String field4ReadPub(Class<?> clazz, Field field) {
         Class<?> propertyType = field.getType();
         // o.xxx
-        String getValueStr = "o." + field.getName();
+        String getValueStr = "o." + field.getName() + "= %s;";
 
         return getField4ReadStr(propertyType, getValueStr);
     }
@@ -37,11 +37,11 @@ public class SDFieldReadBuilder {
     public static String field4Read(Class<?> clazz, Field field) throws IntrospectionException {
         // 通过具有 getFoo 和 setFoo 访问器方法
         PropertyDescriptor propertyDescriptor = new PropertyDescriptor(field.getName(), clazz);
-        Method readMethod = propertyDescriptor.getReadMethod(); // getter
-        //Method readMethod = propertyDescriptor.getReadMethod(); // setter
+        //Method readMethod = propertyDescriptor.getReadMethod(); // getter
+        Method writeMethod = propertyDescriptor.getWriteMethod(); // setter
         Class<?> propertyType = propertyDescriptor.getPropertyType(); // 属性类型
         // o.getXXX()
-        String getValueStr = "o." + readMethod.getName() + "()";
+        String getValueStr = "o." + writeMethod.getName() + "(%s);";
 
         return getField4ReadStr(propertyType, getValueStr);
     }
@@ -54,7 +54,7 @@ public class SDFieldReadBuilder {
         } else if (propertyType == float.class || propertyType == Float.class) {
             return DeseriUtilBuilder.getFloat(getValueStr);
         } else if (propertyType == byte.class || propertyType == Byte.class) {
-            return DeseriUtilBuilder.get(getValueStr);
+            return DeseriUtilBuilder.getByte(getValueStr);
         } else if (propertyType == short.class || propertyType == Short.class) {
             return DeseriUtilBuilder.getShort(getValueStr);
         }else if (propertyType == int.class || propertyType == Integer.class) {

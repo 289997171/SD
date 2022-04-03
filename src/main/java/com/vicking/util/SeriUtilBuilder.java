@@ -18,8 +18,8 @@ public class SeriUtilBuilder {
         return String.format("SeriUtil.putFloat(os, %s);", value);
     }
 
-    public static String put(String value) {
-        return String.format("SeriUtil.put(os, %s);", value);
+    public static String putByte(String value) {
+        return String.format("SeriUtil.putByte(os, %s);", value);
     }
 
     public static String putShort(String value) {
