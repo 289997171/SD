@@ -3,7 +3,6 @@ package com.vicking.util;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Collection;
 import java.util.Date;
 
 public class SeriUtil {
@@ -40,7 +39,7 @@ public class SeriUtil {
         os.write((byte) v);
     }
 
-    public static void put(OutputStream os, byte x) throws IOException {
+    public static void putByte(OutputStream os, byte x) throws IOException {
         os.write(x);
     }
 

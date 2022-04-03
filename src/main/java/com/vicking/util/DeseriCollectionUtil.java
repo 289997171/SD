@@ -61,6 +61,19 @@ public class DeseriCollectionUtil {
         }
     }
 
+    public static ArrayList<Byte> getBytes(InputStream is) throws IOException {
+        int len = getShort(is);
+        if (len == 0) {
+            return null;
+        } else {
+            ArrayList<Byte> list = new ArrayList<>();
+            for (int i = 0; i < len; i++) {
+                list.add(getByte(is));
+            }
+            return list;
+        }
+    }
+
 
     public static ArrayList<Short> getShorts(InputStream is) throws IOException {
         int len = getShort(is);

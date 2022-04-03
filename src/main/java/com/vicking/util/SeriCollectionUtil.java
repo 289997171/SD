@@ -97,6 +97,28 @@ public class SeriCollectionUtil {
         }
     }
 
+    public static void putBytes(OutputStream os, byte... collection) throws IOException {
+        if (collection == null) {
+            putShort(os, (short)0);
+        } else {
+            putShort(os, (short)collection.length);
+            for (byte o : collection) {
+                putByte(os, o);
+            }
+        }
+    }
+
+    public static void putBytes(OutputStream os, Collection<Byte> collection) throws IOException {
+        if (collection == null) {
+            putShort(os, (short)0);
+        } else {
+            putShort(os, (short)collection.size());
+            for (byte o : collection) {
+                putByte(os, o);
+            }
+        }
+    }
+
     public static void putShorts(OutputStream os, short... collection) throws IOException {
         if (collection == null) {
             putShort(os, (short)0);

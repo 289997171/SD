@@ -44,7 +44,7 @@ public class DeseriUtil {
         return Float.intBitsToFloat(v);
     }
 
-    public static byte get(InputStream is) throws IOException {
+    public static byte getByte(InputStream is) throws IOException {
         return (byte)is.read();
     }
 

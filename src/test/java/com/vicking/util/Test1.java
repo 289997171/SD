@@ -1,8 +1,5 @@
 package com.vicking.util;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -13,38 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Test1 {
-
-//    @Getter @Setter @ToString
-//    public static class Obj1 {
-//        private boolean b1;
-//        private boolean b2;
-//
-//        private Date date1;
-//        private Date date2;
-//
-//        private double d1;
-//        private double d2;
-//
-//        private byte bs1;
-//        private byte bs2;
-//
-//        private float f1;
-//        private float f2;
-//
-//        private short s1;
-//        private short s2;
-//
-//        private int i1;
-//        private int i2;
-//
-//        private long l1;
-//        private long l2;
-//
-//        private String str1;
-//        private String str2;
-//
-//    }
-
 
     @Test
     public void testBoolean() throws IOException {
@@ -71,14 +36,14 @@ public class Test1 {
     @Test
     public void testByte() throws IOException, ParseException {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-        SeriUtil.put(os, (byte)123);
-        SeriUtil.put(os, Byte.MAX_VALUE);
-        SeriUtil.put(os, Byte.MIN_VALUE);
+        SeriUtil.putByte(os, (byte)123);
+        SeriUtil.putByte(os, Byte.MAX_VALUE);
+        SeriUtil.putByte(os, Byte.MIN_VALUE);
 
         ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
-        System.out.println(DeseriUtil.get(is));
-        System.out.println(DeseriUtil.get(is));
-        System.out.println(DeseriUtil.get(is));
+        System.out.println(DeseriUtil.getByte(is));
+        System.out.println(DeseriUtil.getByte(is));
+        System.out.println(DeseriUtil.getByte(is));
     }
 
     @Test
