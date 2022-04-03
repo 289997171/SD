@@ -1,32 +1,13 @@
 package com.vicking.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Map;
 
 public class SeriUtil {
 
-    public static void main(String[] args) throws IOException, ParseException {
-
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        putFloat(os, 123.456f);
-        putDouble(os, 12355.45677);
-        putDate(os, new SimpleDateFormat("yyyy-MM-dd").parse("9527-03-28"));
-        ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
-        System.out.println(DeseriUtil.getFloat(is));
-        System.out.println(DeseriUtil.getDouble(is));
-        System.out.println(DeseriUtil.getDate(is));
-//        ByteBuffer buffer = null;
-//        buffer.getFloat();
-    }
 
     public static void putDate(OutputStream os, Date x) throws IOException {
         long v = (long)x.getTime();
@@ -98,45 +79,88 @@ public class SeriUtil {
         } else {
             byte[] bytes = s.getBytes(StandardCharsets.UTF_8);
             putShort(os, (short)bytes.length);
-            //buffer.putInt(bytes.length);
             os.write(bytes);
         }
     }
 
-    public static void putShortCol(OutputStream os, Collection<Short> collection) throws IOException {
-        if (collection == null || collection.isEmpty()) {
+    public static void putShorts(OutputStream os, Collection<Short> collection) throws IOException {
+        if (collection == null) {
             putShort(os, (short)0);
         } else {
             putShort(os, (short)collection.size());
-            for (Short o : collection) {
+            for (short o : collection) {
                 putShort(os, o);
             }
         }
     }
 
-    public static void putIntCol(OutputStream os, Collection<Integer> collection) throws IOException {
-        if (collection == null || collection.isEmpty()) {
+    public static void putShorts(OutputStream os, short... collection) throws IOException {
+        if (collection == null) {
             putShort(os, (short)0);
         } else {
-            putShort(os, (short)collection.size());
-            for (Integer o : collection) {
+            putShort(os, (short)collection.length);
+            for (short o : collection) {
+                putShort(os, o);
+            }
+        }
+    }
+
+    public static void putInts(OutputStream os, int... collection) throws IOException {
+        if (collection == null) {
+            putShort(os, (short)0);
+        } else {
+            putShort(os, (short)collection.length);
+            for (int o : collection) {
                 putInt(os, o);
             }
         }
     }
 
-    public static void putLongCol(OutputStream os, Collection<Long> collection) throws IOException {
-        if (collection == null || collection.isEmpty()) {
+    public static void putInts(OutputStream os, Collection<Integer> collection) throws IOException {
+        if (collection == null) {
             putShort(os, (short)0);
         } else {
             putShort(os, (short)collection.size());
-            for (Long o : collection) {
+            for (int o : collection) {
+                putInt(os, o);
+            }
+        }
+    }
+
+    public static void putLongs(OutputStream os, long... collection) throws IOException {
+        if (collection == null) {
+            putShort(os, (short)0);
+        } else {
+            putShort(os, (short)collection.length);
+            for (long o : collection) {
                 putLong(os, o);
             }
         }
     }
 
-    public static void putStringCol(OutputStream os, Collection<String> collection) throws IOException {
+    public static void putLongs(OutputStream os, Collection<Long> collection) throws IOException {
+        if (collection == null) {
+            putShort(os, (short)0);
+        } else {
+            putShort(os, (short)collection.size());
+            for (long o : collection) {
+                putLong(os, o);
+            }
+        }
+    }
+
+    public static void putStrings(OutputStream os, String... collection) throws IOException {
+        if (collection == null) {
+            putShort(os, (short)0);
+        } else {
+            putShort(os, (short)collection.length);
+            for (String o : collection) {
+                putString(os, o);
+            }
+        }
+    }
+
+    public static void putStrings(OutputStream os, Collection<String> collection) throws IOException {
         if (collection == null || collection.isEmpty()) {
             putShort(os, (short)0);
         } else {
