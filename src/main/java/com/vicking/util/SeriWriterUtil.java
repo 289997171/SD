@@ -1,6 +1,8 @@
 package com.vicking.util;
 
+import cn.hutool.core.lang.hash.Hash;
 import lombok.extern.slf4j.Slf4j;
+import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
@@ -168,19 +170,19 @@ public class SeriWriterUtil {
         sb4Writer.append("\t}").append(ENDWORD);
         sb4Writer.append("}");
 
-//        System.out.println(sb4Writer.toString());
-//        System.out.println(sb4Reader.toString());
+        System.out.println(sb4Writer.toString());
+        System.out.println(sb4Reader.toString());
 
-        try {
-            FileWriter fileWriter1 = new FileWriter(new File("./" + simpleName+"Writer.java"));
-            fileWriter1.write(sb4Writer.toString());
-            fileWriter1.flush();
-            FileWriter fileWriter2 = new FileWriter(new File("./" + simpleName+"Reader.java"));
-            fileWriter2.write(sb4Reader.toString());
-            fileWriter2.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            FileWriter fileWriter1 = new FileWriter(new File("./" + simpleName+"Writer.java"));
+//            fileWriter1.write(sb4Writer.toString());
+//            fileWriter1.flush();
+//            FileWriter fileWriter2 = new FileWriter(new File("./" + simpleName+"Reader.java"));
+//            fileWriter2.write(sb4Reader.toString());
+//            fileWriter2.flush();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         return sb4Writer;
     }
@@ -198,11 +200,11 @@ public class SeriWriterUtil {
             parameterizedType = (ParameterizedType) fieldInfo.field.getGenericType();
         } catch (ClassCastException e) {}
 
-        javaWriterBuilder(sb4Writer, sb4Reader, clazz, propertyType, fieldName, writeMethodName, readMethod, parameterizedType, 0);
+        javaWriterBuilder(sb4Writer, sb4Reader, clazz, propertyType, fieldName, writeMethodName, readMethod, parameterizedType, 0, null);
     }
     public static void javaWriterBuilder(StringBuilder sb4Writer,StringBuilder sb4Reader, Class<?> clazz,
                                          Class<?> propertyType, String fieldName, String writeMethodName,
-                                         Method readMethod, ParameterizedType parameterizedType, int mapKV
+                                         Method readMethod, ParameterizedType parameterizedType, int mapKV, Type[] actualTypeArguments4MapMap
     ) {
 
         if (propertyType == Date.class) {
@@ -342,12 +344,17 @@ public class SeriWriterUtil {
             sb4Reader.append("DeseriUtil.getString(is)");
             sb4Reader.append(");").append(ENDWORD);
         } else if (Collection.class.isAssignableFrom(propertyType)) {
-            Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
+            Type[] actualTypeArguments = null;
+            if (actualTypeArguments4MapMap != null) {
+                actualTypeArguments = actualTypeArguments4MapMap;
+            } else {
+                actualTypeArguments = parameterizedType.getActualTypeArguments();
+            }
+
             if (actualTypeArguments.length == 1) {
                 Type actualTypeArgument = actualTypeArguments[0];
                 if (actualTypeArgument == Short.class) {
                     sb4Writer.append("\t\tSeriUtil.putShortCol(os, ");
-
 
 
 
@@ -360,11 +367,16 @@ public class SeriWriterUtil {
                     sb4Writer.append("\t\tSeriUtil.putIntCol(os, ");
 
 
-                    sb4Reader.append("\t\tCollection<Integer> ").append(fieldName).append(" = DeseriUtil.getIntCol(is);").append(ENDWORD);
-                    sb4Reader.append("\t\tif(").append(fieldName).append(" != null) ");
-                    appendGetValue(sb4Reader, fieldName, readMethod);
-                    sb4Reader.append(".addAll(");
-                    sb4Reader.append(fieldName).append(");").append(ENDWORD);
+                    if (actualTypeArguments4MapMap != null) {
+                        sb4Reader.append("DeseriUtil.getIntCol(is)");
+                    } else {
+                        sb4Reader.append("\t\tCollection<Integer> ").append(fieldName).append(" = DeseriUtil.getIntCol(is);").append(ENDWORD);
+                        sb4Reader.append("\t\tif(").append(fieldName).append(" != null) ");
+                        appendGetValue(sb4Reader, fieldName, readMethod);
+                        sb4Reader.append(".addAll(");
+                        sb4Reader.append(fieldName).append(");").append(ENDWORD);
+                    }
+
                 } else if (actualTypeArgument == Long.class) {
                     sb4Writer.append("\t\tSeriUtil.putLongCol(os, ");
 
@@ -436,16 +448,29 @@ public class SeriWriterUtil {
                 sb4Writer.append(".entrySet()) {").append(ENDWORD);
                 sb4Writer.append("\t");
                 try {
-                    javaWriterBuilder(sb4Writer, sb4Reader, clazz, Class.forName(kt.getTypeName()), "", null, null, null, 1);
+                    javaWriterBuilder(sb4Writer, sb4Reader, clazz, Class.forName(kt.getTypeName()), "", null, null, null, 1, null);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
                 sb4Writer.append("\t");
-                try {
-                    javaWriterBuilder(sb4Writer, sb4Reader, clazz, Class.forName(vt.getTypeName()), "", null, null, null, 2);
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    System.out.println(vt.getTypeName());
+////                    if (Map.class.isAssignableFrom(vt.getClass())) {
+////                        // Map<String, Map<Integer, String>>
+////                        // java.util.Map<java.lang.Integer, java.lang.String>
+////                        vt.
+////                    } else
+//                    javaWriterBuilder(sb4Writer, sb4Reader, clazz, Class.forName(vt.getTypeName()), "", null, null, null, 2,null);
+//                } catch (ClassNotFoundException e) {
+//                    System.out.println("oooo " + vt.getClass());
+//                    ParameterizedType pt = (ParameterizedType) vt;
+//                    try {
+//                        javaWriterBuilder(sb4Writer, sb4Reader, clazz, Class.forName(pt.getRawType().getTypeName()), "", null, null, null, 2, pt.getActualTypeArguments());
+//                    } catch (ClassNotFoundException ex) {
+//                        ex.printStackTrace();
+//                    }
+//                    //e.printStackTrace();
+//                }
 
 //                ParameterizedType subParameterizedType = null;
 //                try {
@@ -461,15 +486,21 @@ public class SeriWriterUtil {
                 appendGetValue(sb4Reader, fieldName, readMethod);
                 sb4Reader.append(".put(");
                 try {
-                    javaWriterBuilder(sb4Writer, sb4Reader, clazz, Class.forName(kt.getTypeName()), "", null, null, null, 3);
+                    javaWriterBuilder(sb4Writer, sb4Reader, clazz, Class.forName(kt.getTypeName()), "", null, null, null, 3, null);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
                 sb4Reader.append(",");
                 try {
-                    javaWriterBuilder(sb4Writer, sb4Reader, clazz, Class.forName(vt.getTypeName()), "", null, null, null, 3);
+                    javaWriterBuilder(sb4Writer, sb4Reader, clazz, Class.forName(vt.getTypeName()), "", null, null, null, 3, null);
                 } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
+                    ParameterizedType pt = (ParameterizedType) vt;
+                    try {
+                        javaWriterBuilder(sb4Writer, sb4Reader, clazz, Class.forName(pt.getRawType().getTypeName()), "", null, null, null, 3, pt.getActualTypeArguments());
+                    } catch (ClassNotFoundException ex) {
+                        ex.printStackTrace();
+                    }
+                    //e.printStackTrace();
                 }
                 sb4Reader.append(");").append(ENDWORD);
                 sb4Reader.append("\t\t}}").append(ENDWORD);
@@ -532,6 +563,6 @@ public class SeriWriterUtil {
 
     public static void main(String[] args) throws Exception {
         //javaWriterBuilder(Player.class);
-        javaWriterBuilder(User.class);
+        javaWriterBuilder(HashMap.class);
     }
 }
