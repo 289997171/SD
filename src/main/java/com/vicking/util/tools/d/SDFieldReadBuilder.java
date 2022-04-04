@@ -141,24 +141,42 @@ public class SDFieldReadBuilder {
         sb.append("for (int " + i + " = 0; " + i + " < " + len + "; " + i + "++) {");
 
         {
-            sb.append(KT.getTypeName()).append(" "+_k+" = ").append(getField4ReadStr(KT, "%s")).append(";");
-            sb.append(VT.getTypeName()).append(" "+_v+" = null;");
+
             if (List.class.isAssignableFrom(vtClass)) {
+                sb.append(KT.getTypeName()).append(" "+_k+" = ").append(getField4ReadStr(KT, "%s")).append(";");
+                sb.append(VT.getTypeName()).append(" "+_v+" = null;");
+
                 sb.append(getField4ReadStrList((ParameterizedType) VT, _v +" = %s;"));
+
+                sb.append(map+".put("+_k+","+_v+");");// putKey
             } else if (Set.class.isAssignableFrom(vtClass)) {
-                sb.append(getField4ReadStrSet((ParameterizedType) VT, _v = " = %s;"));
+                sb.append(KT.getTypeName()).append(" "+_k+" = ").append(getField4ReadStr(KT, "%s")).append(";");
+                sb.append(VT.getTypeName()).append(" "+_v+" = null;");
+
+                sb.append(getField4ReadStrSet((ParameterizedType) VT, _v + " = %s;"));
+
+                sb.append(map+".put("+_k+","+_v+");");// putKey
             } else if (vtClass.isArray()) {
+                sb.append(KT.getTypeName()).append(" "+_k+" = ").append(getField4ReadStr(KT, "%s")).append(";");
+                sb.append(VT.getTypeName()).append(" "+_v+" = null;");
+
                 Class<?> componentType = vtClass.getComponentType();
                 sb.append(getField4ReadStrArr(componentType, _v + " = %s;"));
+
+                sb.append(map+".put("+_k+","+_v+");");// putKey
             } else if (Map.class.isAssignableFrom(vtClass)) {
+                sb.append(KT.getTypeName()).append(" "+_k+" = ").append(getField4ReadStr(KT, "%s")).append(";");
+                sb.append(VT.getTypeName()).append(" "+_v+" = null;");
+
                 sb.append(getField4ReadStrMap((ParameterizedType) VT, _v+" = %s;"));
+
+                sb.append(map+".put("+_k+","+_v+");");// putKey
             } else {
-                sb.append(getField4ReadStr(VT, _v+" = %s;"));
+                //sb.append(getField4ReadStr(VT, _v+" = %s;"));
+                sb.append(map+".put(").append(getField4ReadStr(KT, "%s")).append(",").append(getField4ReadStr(VT, "%s")).append(");");
             }
         }
 
-
-        sb.append(map+".put("+_k+","+_v+");");// putKey
         sb.append("}");
         sb.append(String.format(setValueStr, map));
         sb.append("}}");
@@ -177,14 +195,15 @@ public class SDFieldReadBuilder {
         StringBuilder sb = new StringBuilder();
         String len = randVariableName("len");
         String i = randVariableName("i");
+        String list = randVariableName("list");
         sb.append("{int " + len + " = DeseriUtil.getShort(is);");
         sb.append("if (" + len + " > 0) {");
-        sb.append(parameterizedType.getTypeName()).append(" list = new ArrayList<>();");
+        sb.append(parameterizedType.getTypeName()).append(" "+list+" = new ArrayList<>();");
         sb.append("for (int " + i + " = 0; " + i + " < " + len + "; " + i + "++) {");
-        sb.append("list.add(").append(getField4ReadStr(actualTypeArgument, "%s"));
+        sb.append(list+".add(").append(getField4ReadStr(actualTypeArgument, "%s"));
         sb.append(");");
         sb.append("}");
-        sb.append(String.format(setValueStr, "list"));
+        sb.append(String.format(setValueStr, list));
         sb.append("}}");
         return sb.toString();
 
@@ -201,14 +220,15 @@ public class SDFieldReadBuilder {
         StringBuilder sb = new StringBuilder();
         String len = randVariableName("len");
         String i = randVariableName("i");
+        String set = randVariableName("set");
         sb.append("{int " + len + " = DeseriUtil.getShort(is);");
         sb.append("if (" + len + " > 0) {");
-        sb.append(parameterizedType.getTypeName()).append(" set = new HashSet<>();");
+        sb.append(parameterizedType.getTypeName()).append(" "+set+" = new HashSet<>();");
         sb.append("for (int " + i + " = 0; " + i + " < " + len + "; " + i + "++) {");
-        sb.append("set.add(").append(getField4ReadStr(actualTypeArgument, "%s"));
+        sb.append(set+".add(").append(getField4ReadStr(actualTypeArgument, "%s"));
         sb.append(");");
         sb.append("}");
-        sb.append(String.format(setValueStr, "set"));
+        sb.append(String.format(setValueStr, set));
         sb.append("}}");
         return sb.toString();
     }
@@ -218,13 +238,14 @@ public class SDFieldReadBuilder {
         StringBuilder sb = new StringBuilder();
         String len = randVariableName("len");
         String i = randVariableName("i");
+        String arr = randVariableName("arr");
         sb.append("{int " + len + " = DeseriUtil.getShort(is);");
         sb.append("if (" + len + " > 0) {");
-        sb.append(type).append("[] arr = new ").append(type).append("["+len+"];");
+        sb.append(type).append("[] "+arr+" = new ").append(type).append("["+len+"];");
         sb.append("for (int " + i + " = 0; " + i + " < " + len + "; " + i + "++) {");
-        sb.append("arr[" + i + "] = ").append(getField4ReadStr(componentType, "%s"));
+        sb.append(arr+"[" + i + "] = ").append(getField4ReadStr(componentType, "%s"));
         sb.append(";}");
-        sb.append(String.format(setValueStr, "arr"));
+        sb.append(String.format(setValueStr, arr));
         sb.append("}}");
         return sb.toString();
     }
