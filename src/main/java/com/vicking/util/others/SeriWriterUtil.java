@@ -1,4 +1,4 @@
-package com.vicking.util.tools;
+package com.vicking.util.others;
 
 import com.vicking.util.ann.SD_NO;
 import lombok.extern.slf4j.Slf4j;
