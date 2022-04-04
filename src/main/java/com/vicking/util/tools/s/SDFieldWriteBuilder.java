@@ -82,16 +82,8 @@ public class SDFieldWriteBuilder {
             return SeriUtilBuilder.putString(getValueStr);
         } else if (propertyType == boolean.class || propertyType == Boolean.class) {
             return SeriUtilBuilder.putBoolean(getValueStr);
-        }
-//        else if (Map.class.isAssignableFrom(propertyType)) {
-//            throw new RuntimeException("尚未实现: " + propertyType);
-//        }
-//        // TODO 暂时不考虑数组情况,所有数组用List代替
-//        else if (propertyType.isArray()) {
-//            throw new RuntimeException("尚未实现: " + propertyType);
-//        }
-        else {
-            throw new RuntimeException("尚未实现:" + propertyType);
+        } else {
+            return propertyType.getTypeName() + "Writer.write(os, " + getValueStr + ");";
         }
     }
 

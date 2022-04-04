@@ -83,18 +83,8 @@ public class SDFieldReadBuilder {
             return DeseriUtilBuilder.getString(setValueStr);
         } else if (propertyType == boolean.class || propertyType == Boolean.class) {
             return DeseriUtilBuilder.getBoolean(setValueStr);
-        }
-//        else if (Collection.class.isAssignableFrom(propertyType)) {
-//            throw new RuntimeException("尚未实现: " + propertyType);
-//        } else if (Map.class.isAssignableFrom(propertyType)) {
-//            throw new RuntimeException("尚未实现: " + propertyType);
-//        }
-//        // TODO 暂时不考虑数组情况,所有数组用List代替
-//        else if (propertyType.isArray()) {
-//            throw new RuntimeException("尚未实现: " + propertyType);
-//        }
-        else {
-            throw new RuntimeException("尚未实现: " + propertyType);
+        } else {
+            return String.format(setValueStr, propertyType.getTypeName() + "Reader.read(is)");
         }
     }
 

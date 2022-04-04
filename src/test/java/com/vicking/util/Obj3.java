@@ -25,4 +25,17 @@ public class Obj3 {
     private boolean[] bs5;
     public boolean[] bs6;
 
+    private Obj4 obj4;
+
+    private List<Obj4> obj41;
+    public List<Obj4> obj42;
+
+    private Set<Obj4> obj43;
+    public HashSet<Obj4> obj44;
+
+    private Obj4[] obj45;
+    public Obj4[] obj46;
+
+
+
 }
