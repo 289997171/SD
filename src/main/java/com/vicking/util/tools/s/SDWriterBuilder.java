@@ -17,7 +17,7 @@ public class SDWriterBuilder {
             .append("package ").append(packageName).append(";").append(ENDWORD)
             .append("import java.io.IOException;").append(ENDWORD)
             .append("import java.io.OutputStream;").append(ENDWORD)
-            .append("import java.util.Map;").append(ENDWORD)
+            .append("import java.util.*;").append(ENDWORD)
             .append("public class ").append(classSimpleName).append("Writer {").append(ENDWORD)
             .append("\tpublic static void write(OutputStream os,").append(classSimpleName).append(" o) throws IOException {").append(ENDWORD)
             .append("\t\tif (o == null) {").append(ENDWORD)

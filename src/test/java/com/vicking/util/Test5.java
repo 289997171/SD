@@ -10,6 +10,6 @@ public class Test5 {
     @Test
     void test1() throws IntrospectionException {
         SDBuilder.build(Obj3.class);
-        SDBuilder.build(Obj4.class);
+//        SDBuilder.build(Obj4.class);
     }
 }

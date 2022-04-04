@@ -8,7 +8,6 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 public class SDFieldWriteBuilder {
@@ -58,6 +57,8 @@ public class SDFieldWriteBuilder {
         } else if (propertyClass.isArray()) {
             Class<?> componentType = propertyClass.getComponentType();
             return getField4WriteStrArr(componentType, getValueStr);
+        } if (Map.class.isAssignableFrom(propertyClass)) {
+            return getField4WriteStrMap((ParameterizedType) propertyType, getValueStr);
         } else {
             return getField4WriteStr(propertyType, getValueStr);
         }
@@ -87,6 +88,25 @@ public class SDFieldWriteBuilder {
         }
     }
 
+
+    public static String getField4WriteStrMap(ParameterizedType parameterizedType, String getValueStr) {
+        Type[] actualTypeArguments = parameterizedType.getActualTypeArguments(); /*字段泛型类型*/
+        Type KT = actualTypeArguments[0];
+        Type VT = actualTypeArguments[1];
+
+        //System.out.println(actualTypeArgument.getTypeName());
+        //System.out.println(actualTypeArgument.getClass());
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("if (").append(getValueStr).append(" != null) {");
+        sb.append("SeriUtil.putShort(os, (short)").append(getValueStr).append(".size());");  // 写入长度
+        sb.append("for (Map.Entry<").append(KT.getTypeName()).append(",").append(VT.getTypeName()).append("> entry : ").append(getValueStr).append(".entrySet()) {");
+        sb.append(getField4WriteStr(KT, "entry.getKey()"));
+        sb.append(getField4WriteStr(VT, "entry.getValue()"));
+        sb.append("}}");
+
+        return sb.toString();
+    }
 
     public static String getField4WriteStrCollection(ParameterizedType parameterizedType, String getValueStr) {
         Type[] actualTypeArguments = parameterizedType.getActualTypeArguments(); /*字段泛型类型*/

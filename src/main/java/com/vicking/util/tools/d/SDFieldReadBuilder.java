@@ -55,6 +55,8 @@ public class SDFieldReadBuilder {
             return getField4ReadStrList((ParameterizedType) propertyType, setValueStr);
         } else if (Set.class.isAssignableFrom(propertyClass)) {
             return getField4ReadStrSet((ParameterizedType) propertyType, setValueStr);
+        } else if (Map.class.isAssignableFrom(propertyClass)) {
+            return getField4ReadStrMap((ParameterizedType) propertyType, setValueStr);
         } else if (propertyClass.isArray()) {
             Class<?> componentType = propertyClass.getComponentType();
             return getField4ReadStrArr(componentType, setValueStr);
@@ -88,12 +90,36 @@ public class SDFieldReadBuilder {
         }
     }
 
+    public static String getField4ReadStrMap(ParameterizedType parameterizedType, String setValueStr){
+        Type[] actualTypeArguments = parameterizedType.getActualTypeArguments(); /*字段泛型类型*/
+        Type KT = actualTypeArguments[0];
+        Type VT = actualTypeArguments[1];
+
+        System.out.println(parameterizedType.getTypeName());
+        //System.out.println(KT.getTypeName());
+        //System.out.println(VT.getClass());
+
+        //String type = actualTypeArgument.getTypeName();
+        StringBuilder sb = new StringBuilder();
+        sb.append("{int len = DeseriUtil.getShort(is);");
+        sb.append("if (len > 0) {");
+        sb.append(parameterizedType.getTypeName()).append(" map = new ").append(parameterizedType.getTypeName()).append("();");
+        sb.append("for (int i = 0; i < len; i++) {");
+        sb.append("map.put(").append(getField4ReadStr(KT, "%s")).append(",").append(getField4ReadStr(VT, "%s"));
+        sb.append(");");
+        sb.append("}");
+        sb.append(String.format(setValueStr, "map"));
+        sb.append("}}");
+        return sb.toString();
+
+    }
+
     public static String getField4ReadStrList(ParameterizedType parameterizedType, String setValueStr){
         Type[] actualTypeArguments = parameterizedType.getActualTypeArguments(); /*字段泛型类型*/
         Type actualTypeArgument = actualTypeArguments[0];
 
-        System.out.println(actualTypeArgument.getTypeName());
-        System.out.println(actualTypeArgument.getClass());
+        //System.out.println(actualTypeArgument.getTypeName());
+        //System.out.println(actualTypeArgument.getClass());
 
         String type = actualTypeArgument.getTypeName();
         StringBuilder sb = new StringBuilder();
