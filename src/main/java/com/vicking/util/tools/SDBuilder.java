@@ -1,5 +1,6 @@
 package com.vicking.util.tools;
 
+import com.vicking.util.ann.SD_NO;
 import com.vicking.util.tools.d.SDFieldReadBuilder;
 import com.vicking.util.tools.d.SDReaderBuilder;
 import com.vicking.util.tools.s.SDFieldWriteBuilder;
@@ -89,6 +90,9 @@ public class SDBuilder {
         {
             boolean isPublic = true;
             for (Field pubField : clazz.getFields()) {
+                SD_NO sd_no = pubField.getAnnotation(SD_NO.class);
+                if (sd_no != null) continue;
+
                 sb4Writer.append(SDFieldWriteBuilder.field4Write(clazz, pubField, isPublic)).append(ENDTAG);
                 sb4Reader.append(SDFieldReadBuilder.field4Read(clazz, pubField, isPublic)).append(ENDTAG);
                 publicFields.add(pubField);
@@ -99,6 +103,8 @@ public class SDBuilder {
             Field[] declaredFields = clazz.getDeclaredFields();
             boolean isPublic = false;
             for (Field declaredField : declaredFields) {
+                SD_NO sd_no = declaredField.getAnnotation(SD_NO.class);
+                if (sd_no != null) continue;
                 if (publicFields.contains(declaredField)) continue;
                 sb4Writer.append(SDFieldWriteBuilder.field4Write(clazz, declaredField, isPublic)).append(ENDTAG);
                 sb4Reader.append(SDFieldReadBuilder.field4Read(clazz, declaredField, isPublic)).append(ENDTAG);
