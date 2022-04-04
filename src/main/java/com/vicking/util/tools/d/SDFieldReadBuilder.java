@@ -125,7 +125,7 @@ public class SDFieldReadBuilder {
         StringBuilder sb = new StringBuilder();
         sb.append("{int len = DeseriUtil.getShort(is);");
         sb.append("if (len > 0) {");
-        sb.append("ArrayList<").append(type).append("> list = new ArrayList<>();");
+        sb.append(parameterizedType.getTypeName()).append(" list = new ArrayList<>();");
         sb.append("for (int i = 0; i < len; i++) {");
         sb.append("list.add(").append(getField4ReadStr(actualTypeArgument, "%s"));
         sb.append(");");
@@ -147,7 +147,7 @@ public class SDFieldReadBuilder {
         StringBuilder sb = new StringBuilder();
         sb.append("{int len = DeseriUtil.getShort(is);");
         sb.append("if (len > 0) {");
-        sb.append("HashSet<").append(type).append("> set = new HashSet<>();");
+        sb.append(parameterizedType.getTypeName()).append(" set = new HashSet<>();");
         sb.append("for (int i = 0; i < len; i++) {");
         sb.append("set.add(").append(getField4ReadStr(actualTypeArgument, "%s"));
         sb.append(");");

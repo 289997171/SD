@@ -98,7 +98,7 @@ public class SDFieldWriteBuilder {
         //System.out.println(actualTypeArgument.getClass());
 
         StringBuilder sb = new StringBuilder();
-        sb.append("if (").append(getValueStr).append(" != null) {");
+        sb.append("if (").append(getValueStr).append(" == null) {").append(SeriUtilBuilder.putShort("0")).append("} else {");
         sb.append("SeriUtil.putShort(os, (short)").append(getValueStr).append(".size());");  // 写入长度
         sb.append("for (Map.Entry<").append(KT.getTypeName()).append(",").append(VT.getTypeName()).append("> entry : ").append(getValueStr).append(".entrySet()) {");
         sb.append(getField4WriteStr(KT, "entry.getKey()"));
@@ -116,7 +116,7 @@ public class SDFieldWriteBuilder {
         //System.out.println(actualTypeArgument.getClass());
 
         StringBuilder sb = new StringBuilder();
-        sb.append("if (").append(getValueStr).append(" != null) {");
+        sb.append("if (").append(getValueStr).append(" == null) {").append(SeriUtilBuilder.putShort("0")).append("} else {");
         sb.append("SeriUtil.putShort(os, (short)").append(getValueStr).append(".size());");  // 写入长度
         sb.append("for (").append(actualTypeArgument.getTypeName()).append(" item : ").append(getValueStr).append(") {");
         sb.append(getField4WriteStr(actualTypeArgument, "item"));
@@ -131,7 +131,7 @@ public class SDFieldWriteBuilder {
         //System.out.println(actualTypeArgument.getClass());
 
         StringBuilder sb = new StringBuilder();
-        sb.append("if (").append(getValueStr).append(" != null) {");
+        sb.append("if (").append(getValueStr).append(" == null) {").append(SeriUtilBuilder.putShort("0")).append("} else {");
         sb.append("SeriUtil.putShort(os, (short)").append(getValueStr).append(".length);");  // 写入长度
         sb.append("for (").append(componentType.getTypeName()).append(" item : ").append(getValueStr).append(") {");
         sb.append(getField4WriteStr(componentType, "item"));
