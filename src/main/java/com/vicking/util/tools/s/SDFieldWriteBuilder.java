@@ -11,6 +11,7 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
+import java.util.Random;
 
 @Slf4j
 public class SDFieldWriteBuilder {
@@ -91,6 +92,20 @@ public class SDFieldWriteBuilder {
         }
     }
 
+    public static String getRandomString(int length) {
+        String str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        Random random = new Random();
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < length; i++) {
+            int number = random.nextInt(62);
+            sb.append(str.charAt(number));
+        }
+        return sb.toString();
+    }
+
+    private static String randVariableName(String variableName) {
+        return variableName + getRandomString(6);
+    }
 
     public static String getField4WriteStrMap(ParameterizedType parameterizedType, String getValueStr) {
         Type[] actualTypeArguments = parameterizedType.getActualTypeArguments(); /*字段泛型类型*/
@@ -104,10 +119,11 @@ public class SDFieldWriteBuilder {
 //        log.info("xxxx2");
 
         StringBuilder sb = new StringBuilder();
+        String entry = randVariableName("entry");
         sb.append("if (").append(getValueStr).append(" == null) {").append(SeriUtilBuilder.putShort("0")).append("} else {");
         sb.append("SeriUtil.putShort(os, (short)").append(getValueStr).append(".size());");  // 写入长度
-        sb.append("for (Map.Entry<").append(KT.getTypeName()).append(",").append(VT.getTypeName()).append("> entry : ").append(getValueStr).append(".entrySet()) {");
-        sb.append(getField4WriteStr(KT, "entry.getKey()"));
+        sb.append("for (Map.Entry<").append(KT.getTypeName()).append(",").append(VT.getTypeName()).append("> "+entry+" : ").append(getValueStr).append(".entrySet()) {");
+        sb.append(getField4WriteStr(KT, entry + ".getKey()"));
 
         Class<?> vtClass = null;
         if (VT instanceof ParameterizedType) {
@@ -120,28 +136,18 @@ public class SDFieldWriteBuilder {
         } else {
             vtClass = (Class) VT;
         }
+
         //System.out.println(vtClass); // class java.util.ArrayList
         if (Collection.class.isAssignableFrom(vtClass)) {
-            sb.append(getField4WriteStrCollection((ParameterizedType) VT, "entry.getValue()"));
+            sb.append(getField4WriteStrCollection((ParameterizedType) VT, entry + ".getValue()"));
         } else if (vtClass.isArray()) {
             Class<?> componentType = vtClass.getComponentType();
-            sb.append(getField4WriteStrArr(componentType, "entry.getValue()"));
+            sb.append(getField4WriteStrArr(componentType, entry +".getValue()"));
         } else if (Map.class.isAssignableFrom(vtClass)) {
-            sb.append(getField4WriteStrMap((ParameterizedType) VT, "entry.getValue()"));
+            sb.append(getField4WriteStrMap((ParameterizedType) VT, entry +".getValue()"));
         } else {
-            sb.append(getField4WriteStr(VT, "entry.getValue()"));
+            sb.append(getField4WriteStr(VT, entry +".getValue()"));
         }
-//        }
-//        if (Collection.class.isAssignableFrom(VT)) {
-//            return getField4WriteStrCollection((ParameterizedType) propertyType, getValueStr);
-//        } else if (VT.isArray()) {
-//            Class<?> componentType = propertyClass.getComponentType();
-//            return getField4WriteStrArr(componentType, getValueStr);
-//        } else if (Map.class.isAssignableFrom(propertyClass)) {
-//            return getField4WriteStrMap((ParameterizedType) propertyType, getValueStr);
-//        } else {
-//            sb.append(getField4WriteStr(VT, "entry.getValue()"));
-//        }
         sb.append("}}");
 
         return sb.toString();
@@ -155,10 +161,11 @@ public class SDFieldWriteBuilder {
         //log.info(actualTypeArgument.getClass());
 
         StringBuilder sb = new StringBuilder();
+        String item = randVariableName("item");
         sb.append("if (").append(getValueStr).append(" == null) {").append(SeriUtilBuilder.putShort("0")).append("} else {");
         sb.append("SeriUtil.putShort(os, (short)").append(getValueStr).append(".size());");  // 写入长度
-        sb.append("for (").append(actualTypeArgument.getTypeName()).append(" item : ").append(getValueStr).append(") {");
-        sb.append(getField4WriteStr(actualTypeArgument, "item"));
+        sb.append("for (").append(actualTypeArgument.getTypeName()).append(" "+item+" : ").append(getValueStr).append(") {");
+        sb.append(getField4WriteStr(actualTypeArgument, item));
         sb.append("}}");
 
         return sb.toString();
@@ -170,10 +177,11 @@ public class SDFieldWriteBuilder {
         //log.info(actualTypeArgument.getClass());
 
         StringBuilder sb = new StringBuilder();
+        String item = randVariableName("item");
         sb.append("if (").append(getValueStr).append(" == null) {").append(SeriUtilBuilder.putShort("0")).append("} else {");
         sb.append("SeriUtil.putShort(os, (short)").append(getValueStr).append(".length);");  // 写入长度
-        sb.append("for (").append(componentType.getTypeName()).append(" item : ").append(getValueStr).append(") {");
-        sb.append(getField4WriteStr(componentType, "item"));
+        sb.append("for (").append(componentType.getTypeName()).append(" "+item+" : ").append(getValueStr).append(") {");
+        sb.append(getField4WriteStr(componentType, item));
         sb.append("}}");
 
         return sb.toString();

@@ -131,33 +131,36 @@ public class SDFieldReadBuilder {
         //String type = actualTypeArgument.getTypeName();
         String len = randVariableName("len");
         String i = randVariableName("i");
+        String map = randVariableName("map");
+        String _k = randVariableName("_k");
+        String _v = randVariableName("_v");
         StringBuilder sb = new StringBuilder();
         sb.append("{int " + len + " = DeseriUtil.getShort(is);");
         sb.append("if (" + len + " > 0) {");
-        sb.append(parameterizedType.getTypeName()).append(" map = new ").append(parameterizedType.getTypeName()).append("();");
+        sb.append(parameterizedType.getTypeName()).append(" "+map+" = new ").append(parameterizedType.getTypeName()).append("();");
         sb.append("for (int " + i + " = 0; " + i + " < " + len + "; " + i + "++) {");
 
         {
-            sb.append(KT.getTypeName()).append(" _k = ").append(getField4ReadStr(KT, "%s")).append(";");
-            sb.append(VT.getTypeName()).append(" _v = null;");
+            sb.append(KT.getTypeName()).append(" "+_k+" = ").append(getField4ReadStr(KT, "%s")).append(";");
+            sb.append(VT.getTypeName()).append(" "+_v+" = null;");
             if (List.class.isAssignableFrom(vtClass)) {
-                sb.append(getField4ReadStrList((ParameterizedType) VT, "_v = %s;"));
+                sb.append(getField4ReadStrList((ParameterizedType) VT, _v +" = %s;"));
             } else if (Set.class.isAssignableFrom(vtClass)) {
-                sb.append(getField4ReadStrSet((ParameterizedType) VT, "_v = %s;"));
+                sb.append(getField4ReadStrSet((ParameterizedType) VT, _v = " = %s;"));
             } else if (vtClass.isArray()) {
                 Class<?> componentType = vtClass.getComponentType();
-                sb.append(getField4ReadStrArr(componentType, "_v = %s;"));
+                sb.append(getField4ReadStrArr(componentType, _v + " = %s;"));
             } else if (Map.class.isAssignableFrom(vtClass)) {
-                sb.append(getField4ReadStrMap((ParameterizedType) VT, "_v = %s;"));
+                sb.append(getField4ReadStrMap((ParameterizedType) VT, _v+" = %s;"));
             } else {
-                sb.append(getField4ReadStr(VT, "_v = %s;"));
+                sb.append(getField4ReadStr(VT, _v+" = %s;"));
             }
         }
 
 
-        sb.append("map.put(_k,_v);");// putKey
+        sb.append(map+".put("+_k+","+_v+");");// putKey
         sb.append("}");
-        sb.append(String.format(setValueStr, "map"));
+        sb.append(String.format(setValueStr, map));
         sb.append("}}");
         return sb.toString();
 

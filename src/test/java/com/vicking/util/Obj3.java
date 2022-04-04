@@ -2,10 +2,11 @@ package com.vicking.util;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.*;
 
-@Getter @Setter
+@Getter @Setter @ToString
 public class Obj3 {
 //    private int iv;
 //    private Integer iv2;
@@ -33,12 +34,12 @@ public class Obj3 {
 //    private Obj4[] obj45;
 //    public Obj4[] obj46;
 
-    private HashMap<Integer, String> map1;
-    private HashMap<Integer, ArrayList<String>> map2;
-    private HashMap<Integer, HashSet<String>> map3;
-    private HashMap<Integer, String[]> map4;
-    private HashMap<Integer, boolean[]> map5;
+//    private HashMap<Integer, String> map1;
+//    private HashMap<Integer, ArrayList<String>> map2;
+//    private HashMap<Integer, HashSet<String>> map3;
+//    private HashMap<Integer, String[]> map4;
+//    private HashMap<Integer, boolean[]> map5;
 
-
+    private HashMap<Integer, HashMap<Integer, HashMap<Integer, Float>>> map6;
 
 }
