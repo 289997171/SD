@@ -1,7 +1,5 @@
 package com.vicking.util.tools.d;
 
-import com.vicking.util.pojo.User;
-
 public class SDReaderBuilder {
 
     private static final String ENDWORD = "\r\n";
@@ -31,11 +29,4 @@ public class SDReaderBuilder {
         .toString();
     }
 
-    public static void main(String[] args) {
-        Class<?> clazz = User.class;
-        String packageName = clazz.getPackage().getName();
-        String classSimpleName = clazz.getSimpleName();
-        String classReaderStr = classReader("4XXX", packageName, classSimpleName);
-        System.out.println(classReaderStr);
-    }
 }

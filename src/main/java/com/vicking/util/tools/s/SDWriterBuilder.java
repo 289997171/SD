@@ -1,7 +1,5 @@
 package com.vicking.util.tools.s;
 
-import com.vicking.util.pojo.User;
-
 public class SDWriterBuilder {
 
     private static final String ENDWORD = "\r\n";
@@ -33,15 +31,4 @@ public class SDWriterBuilder {
             .toString();
     }
 
-
-
-
-
-    public static void main(String[] args) {
-        Class<?> clazz = User.class;
-        String packageName = clazz.getPackage().getName();
-        String classSimpleName = clazz.getSimpleName();
-        String classWriterStr = classWriter("4XXX", packageName, classSimpleName);
-        System.out.println(classWriterStr);
-    }
 }
