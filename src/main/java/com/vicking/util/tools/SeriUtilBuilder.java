@@ -1,4 +1,4 @@
-package com.vicking.util;
+package com.vicking.util.tools;
 
 public class SeriUtilBuilder {
 

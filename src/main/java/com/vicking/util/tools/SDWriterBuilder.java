@@ -21,10 +21,10 @@ public class SDWriterBuilder {
             .append("public class ").append(classSimpleName).append("Writer {").append(ENDWORD)
             .append("\tpublic static void write(OutputStream os,").append(classSimpleName).append(" o) throws IOException {").append(ENDWORD)
             .append("\t\tif (o == null) {").append(ENDWORD)
-            .append("\t\t\tSeriUtil.put(os, (byte)0);").append(ENDWORD)
+            .append("\t\t\tos.write(0);").append(ENDWORD)
             .append("\t\t\treturn;").append(ENDWORD)
             .append("\t\t}").append(ENDWORD)
-            .append("\t\tSeriUtil.put(os, (byte)1);").append(ENDWORD)
+            .append("\t\tos.write(1);").append(ENDWORD)
 
                 .append("\t\t%s").append(ENDWORD) // 需要补全的内容
 

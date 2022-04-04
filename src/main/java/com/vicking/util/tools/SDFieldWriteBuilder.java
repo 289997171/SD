@@ -1,7 +1,5 @@
 package com.vicking.util.tools;
 
-import com.vicking.util.SeriUtilBuilder;
-
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
@@ -12,36 +10,39 @@ import java.util.Map;
 
 public class SDFieldWriteBuilder {
 
-    /**
-     * public 的属性
-     * @param clazz
-     * @param field
-     * @return
-     * @throws IntrospectionException
-     */
-    public static String field4WritePub(Class<?> clazz, Field field) {
-        Class<?> propertyType = field.getType();
-        // o.xxx
-        String getValueStr = "o." + field.getName();
-
-        return getField4WriteStr(propertyType, getValueStr);
+    public static String field4Write(Class<?> clazz, String fieldName, boolean isPublic) throws IntrospectionException, NoSuchFieldException {
+        Field field;
+        if (isPublic) {
+            field = clazz.getField(fieldName);
+        } else {
+            field = clazz.getDeclaredField(fieldName);
+        }
+        return field4Write(clazz, field, isPublic);
     }
 
     /**
-     * get set 属性
      * @param clazz
      * @param field
+     * @param isPublic
      * @return
      * @throws IntrospectionException
      */
-    public static String field4Write(Class<?> clazz, Field field) throws IntrospectionException {
-        // 通过具有 getFoo 和 setFoo 访问器方法
-        PropertyDescriptor propertyDescriptor = new PropertyDescriptor(field.getName(), clazz);
-        Method readMethod = propertyDescriptor.getReadMethod(); // getter
-        //Method writeMethod = propertyDescriptor.getWriteMethod(); // setter
-        Class<?> propertyType = propertyDescriptor.getPropertyType(); // 属性类型
-        // o.getXXX()
-        String getValueStr = "o." + readMethod.getName() + "()";
+    public static String field4Write(Class<?> clazz, Field field, boolean isPublic) throws IntrospectionException {
+        Class<?> propertyType;
+        String getValueStr;
+        if (isPublic) {
+            propertyType = field.getType();
+            // o.xxx
+            getValueStr = "o." + field.getName();
+        } else {
+            // 通过具有 getFoo 和 setFoo 访问器方法
+            PropertyDescriptor propertyDescriptor = new PropertyDescriptor(field.getName(), clazz);
+            Method readMethod = propertyDescriptor.getReadMethod(); // getter
+            //Method writeMethod = propertyDescriptor.getWriteMethod(); // setter
+            propertyType = propertyDescriptor.getPropertyType(); // 属性类型
+            // o.getXXX()
+            getValueStr = "o." + readMethod.getName() + "()";
+        }
 
         return getField4WriteStr(propertyType, getValueStr);
     }
@@ -66,7 +67,6 @@ public class SDFieldWriteBuilder {
         } else if (propertyType == boolean.class || propertyType == Boolean.class) {
             return SeriUtilBuilder.putBoolean(getValueStr);
         } else if (Collection.class.isAssignableFrom(propertyType)) {
-
             throw new RuntimeException("尚未实现");
         } else if (Map.class.isAssignableFrom(propertyType)) {
             throw new RuntimeException("尚未实现");

@@ -20,7 +20,7 @@ public class SDReaderBuilder {
         .append("import java.util.Collection;").append(ENDWORD)
         .append("public class ").append(classSimpleName).append("Reader {").append(ENDWORD)
         .append("\tpublic static ").append(classSimpleName).append(" read(InputStream is) throws IOException {").append(ENDWORD)
-        .append("\t\tif(DeseriUtil.get(is) == 0) return null;").append(ENDWORD)
+        .append("\t\tif(is.read() == 0) return null;").append(ENDWORD)
         .append("\t\t").append(classSimpleName).append(" o = new ").append(classSimpleName).append("();").append(ENDWORD)
 
                 .append("\t\t%s").append(ENDWORD) // 需要补全的内容
