@@ -55,9 +55,7 @@ public class SDFieldWriteBuilder {
 
         if (Collection.class.isAssignableFrom(propertyClass)) {
             return getField4WriteStrCollection((ParameterizedType) propertyType, getValueStr);
-        } if (propertyClass.isArray()) {
-            //System.out.println(propertyClass); // class [Z
-            //System.out.println(propertyType); // class [Z
+        } else if (propertyClass.isArray()) {
             Class<?> componentType = propertyClass.getComponentType();
             return getField4WriteStrArr(componentType, getValueStr);
         } else {
@@ -76,7 +74,7 @@ public class SDFieldWriteBuilder {
             return SeriUtilBuilder.putByte(getValueStr);
         } else if (propertyType == short.class || propertyType == Short.class) {
             return SeriUtilBuilder.putShort(getValueStr);
-        }else if (propertyType == int.class || propertyType == Integer.class) {
+        } else if (propertyType == int.class || propertyType == Integer.class) {
             return SeriUtilBuilder.putInt(getValueStr);
         } else if (propertyType == long.class || propertyType == Long.class) {
             return SeriUtilBuilder.putLong(getValueStr);
@@ -106,10 +104,11 @@ public class SDFieldWriteBuilder {
         //System.out.println(actualTypeArgument.getClass());
 
         StringBuilder sb = new StringBuilder();
+        sb.append("if (").append(getValueStr).append(" != null) {");
         sb.append("SeriUtil.putShort(os, (short)").append(getValueStr).append(".size());");  // 写入长度
         sb.append("for (").append(actualTypeArgument.getTypeName()).append(" item : ").append(getValueStr).append(") {");
         sb.append(getField4WriteStr(actualTypeArgument, "item"));
-        sb.append("}");
+        sb.append("}}");
 
         return sb.toString();
     }
@@ -120,10 +119,11 @@ public class SDFieldWriteBuilder {
         //System.out.println(actualTypeArgument.getClass());
 
         StringBuilder sb = new StringBuilder();
+        sb.append("if (").append(getValueStr).append(" != null) {");
         sb.append("SeriUtil.putShort(os, (short)").append(getValueStr).append(".length);");  // 写入长度
         sb.append("for (").append(componentType.getTypeName()).append(" item : ").append(getValueStr).append(") {");
         sb.append(getField4WriteStr(componentType, "item"));
-        sb.append("}");
+        sb.append("}}");
 
         return sb.toString();
     }
