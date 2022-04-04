@@ -12,13 +12,13 @@ public class SDWriterBuilder {
      * @param classSimpleName clazz.getSimpleName()
      * @return
      */
-    public static String classWriter(String packageName, String classSimpleName) {
+    public static String classWriter(String groupName, String packageName, String classSimpleName) {
         return new StringBuilder()
             .append("package ").append(packageName).append(";").append(ENDWORD)
             .append("import java.io.IOException;").append(ENDWORD)
             .append("import java.io.OutputStream;").append(ENDWORD)
             .append("import java.util.*;").append(ENDWORD)
-            .append("public class ").append(classSimpleName).append("Writer {").append(ENDWORD)
+            .append("public class ").append(classSimpleName).append(groupName == null ? "" : groupName).append("Writer {").append(ENDWORD)
             .append("\tpublic static void write(OutputStream os,").append(classSimpleName).append(" o) throws IOException {").append(ENDWORD)
             .append("\t\tif (o == null) {").append(ENDWORD)
             .append("\t\t\tos.write(0);").append(ENDWORD)
@@ -41,7 +41,7 @@ public class SDWriterBuilder {
         Class<?> clazz = User.class;
         String packageName = clazz.getPackage().getName();
         String classSimpleName = clazz.getSimpleName();
-        String classWriterStr = classWriter(packageName, classSimpleName);
+        String classWriterStr = classWriter("4XXX", packageName, classSimpleName);
         System.out.println(classWriterStr);
     }
 }

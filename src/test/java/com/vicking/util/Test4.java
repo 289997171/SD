@@ -17,7 +17,7 @@ public class Test4 {
 
     @Test
     public void testSDWriterBuilder() {
-        System.out.println(SDWriterBuilder.classWriter("com.xxx.xxx", "XXX"));
+        System.out.println(SDWriterBuilder.classWriter(null, "com.xxx.xxx", "XXX"));
     }
 
     @Test
@@ -59,8 +59,8 @@ public class Test4 {
         Class<?> clazz = Obj1.class;
 
 
-        String classWriter = SDWriterBuilder.classWriter(clazz.getPackage().getName(), clazz.getSimpleName());
-        String classReader = SDReaderBuilder.classReader(clazz.getPackage().getName(), clazz.getSimpleName());
+        String classWriter = SDWriterBuilder.classWriter(null, clazz.getPackage().getName(), clazz.getSimpleName());
+        String classReader = SDReaderBuilder.classReader(null, clazz.getPackage().getName(), clazz.getSimpleName());
 
         StringBuilder sb4Writer = new StringBuilder();
         StringBuilder sb4Reader = new StringBuilder();
