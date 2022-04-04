@@ -1,4 +1,4 @@
-package com.vicking.util.tools;
+package com.vicking.util.tools.s;
 
 import java.io.OutputStream;
 

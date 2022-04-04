@@ -1,4 +1,4 @@
-package com.vicking.util.tools;
+package com.vicking.util.tools.s;
 
 import com.vicking.util.pojo.User;
 

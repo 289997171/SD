@@ -1,12 +1,18 @@
 package com.vicking.util.tools;
 
+import com.vicking.util.tools.d.SDFieldReadBuilder;
+import com.vicking.util.tools.d.SDReaderBuilder;
+import com.vicking.util.tools.s.SDFieldWriteBuilder;
+import com.vicking.util.tools.s.SDWriterBuilder;
+
 import java.beans.IntrospectionException;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
 
 public class SDBuilder {
+
+    public static final String ENDTAG = "\r\n";
 
     public static void build(Class<?> clazz) throws IntrospectionException {
         String packageName = clazz.getPackage().getName();
@@ -22,8 +28,8 @@ public class SDBuilder {
             Field[] publicFields = clazz.getFields();
             boolean isPublic = true;
             for (Field declaredField : publicFields) {
-                sb4Writer.append(SDFieldWriteBuilder.field4Write(clazz, declaredField, isPublic)).append("\r\n");
-                sb4Reader.append(SDFieldReadBuilder.field4Read(clazz, declaredField, isPublic)).append("\r\n");
+                sb4Writer.append(SDFieldWriteBuilder.field4Write(clazz, declaredField, isPublic)).append(ENDTAG);
+                sb4Reader.append(SDFieldReadBuilder.field4Read(clazz, declaredField, isPublic)).append(ENDTAG);
             }
         }
 
@@ -31,8 +37,8 @@ public class SDBuilder {
             Field[] declaredFields = clazz.getDeclaredFields();
             boolean isPublic = false;
             for (Field declaredField : declaredFields) {
-                sb4Writer.append(SDFieldWriteBuilder.field4Write(clazz, declaredField, isPublic)).append("\r\n");
-                sb4Reader.append(SDFieldReadBuilder.field4Read(clazz, declaredField, isPublic)).append("\r\n");
+                sb4Writer.append(SDFieldWriteBuilder.field4Write(clazz, declaredField, isPublic)).append(ENDTAG);
+                sb4Reader.append(SDFieldReadBuilder.field4Read(clazz, declaredField, isPublic)).append(ENDTAG);
             }
         }
 
