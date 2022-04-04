@@ -1,5 +1,7 @@
 package com.vicking.util.tools.d;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
@@ -8,6 +10,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.*;
 
+@Slf4j
 public class SDFieldReadBuilder {
 
     public static String field4Read(Class<?> clazz, String fieldName, boolean isPublic) throws IntrospectionException, NoSuchFieldException {
@@ -21,7 +24,6 @@ public class SDFieldReadBuilder {
     }
 
     /**
-     *
      * @param clazz
      * @param field
      * @param isPublic
@@ -90,23 +92,70 @@ public class SDFieldReadBuilder {
         }
     }
 
-    public static String getField4ReadStrMap(ParameterizedType parameterizedType, String setValueStr){
+    public static String getRandomString(int length) {
+        String str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        Random random = new Random();
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < length; i++) {
+            int number = random.nextInt(62);
+            sb.append(str.charAt(number));
+        }
+        return sb.toString();
+    }
+
+    private static String randVariableName(String variableName) {
+        return variableName + getRandomString(6);
+    }
+
+    public static String getField4ReadStrMap(ParameterizedType parameterizedType, String setValueStr) {
         Type[] actualTypeArguments = parameterizedType.getActualTypeArguments(); /*字段泛型类型*/
         Type KT = actualTypeArguments[0];
         Type VT = actualTypeArguments[1];
 
-        System.out.println(parameterizedType.getTypeName());
-        //System.out.println(KT.getTypeName());
-        //System.out.println(VT.getClass());
+        //log.info(parameterizedType.getTypeName());
+        //log.info(KT.getTypeName());
+        //log.info(VT.getClass());
+
+        Class<?> vtClass = null;
+        if (VT instanceof ParameterizedType) {
+            Type rawType = ((ParameterizedType) VT).getRawType();
+            try {
+                vtClass = Class.forName(rawType.getTypeName());
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        } else {
+            vtClass = (Class) VT;
+        }
 
         //String type = actualTypeArgument.getTypeName();
+        String len = randVariableName("len");
+        String i = randVariableName("i");
         StringBuilder sb = new StringBuilder();
-        sb.append("{int len = DeseriUtil.getShort(is);");
-        sb.append("if (len > 0) {");
+        sb.append("{int " + len + " = DeseriUtil.getShort(is);");
+        sb.append("if (" + len + " > 0) {");
         sb.append(parameterizedType.getTypeName()).append(" map = new ").append(parameterizedType.getTypeName()).append("();");
-        sb.append("for (int i = 0; i < len; i++) {");
-        sb.append("map.put(").append(getField4ReadStr(KT, "%s")).append(",").append(getField4ReadStr(VT, "%s"));
-        sb.append(");");
+        sb.append("for (int " + i + " = 0; " + i + " < " + len + "; " + i + "++) {");
+
+        {
+            sb.append(KT.getTypeName()).append(" _k = ").append(getField4ReadStr(KT, "%s")).append(";");
+            sb.append(VT.getTypeName()).append(" _v = null;");
+            if (List.class.isAssignableFrom(vtClass)) {
+                sb.append(getField4ReadStrList((ParameterizedType) VT, "_v = %s;"));
+            } else if (Set.class.isAssignableFrom(vtClass)) {
+                sb.append(getField4ReadStrSet((ParameterizedType) VT, "_v = %s;"));
+            } else if (vtClass.isArray()) {
+                Class<?> componentType = vtClass.getComponentType();
+                sb.append(getField4ReadStrArr(componentType, "_v = %s;"));
+            } else if (Map.class.isAssignableFrom(vtClass)) {
+                sb.append(getField4ReadStrMap((ParameterizedType) VT, "_v = %s;"));
+            } else {
+                sb.append(getField4ReadStr(VT, "_v = %s;"));
+            }
+        }
+
+
+        sb.append("map.put(_k,_v);");// putKey
         sb.append("}");
         sb.append(String.format(setValueStr, "map"));
         sb.append("}}");
@@ -114,19 +163,21 @@ public class SDFieldReadBuilder {
 
     }
 
-    public static String getField4ReadStrList(ParameterizedType parameterizedType, String setValueStr){
+    public static String getField4ReadStrList(ParameterizedType parameterizedType, String setValueStr) {
         Type[] actualTypeArguments = parameterizedType.getActualTypeArguments(); /*字段泛型类型*/
         Type actualTypeArgument = actualTypeArguments[0];
 
-        //System.out.println(actualTypeArgument.getTypeName());
-        //System.out.println(actualTypeArgument.getClass());
+        //log.info(actualTypeArgument.getTypeName());
+        //log.info(actualTypeArgument.getClass());
 
         String type = actualTypeArgument.getTypeName();
         StringBuilder sb = new StringBuilder();
-        sb.append("{int len = DeseriUtil.getShort(is);");
-        sb.append("if (len > 0) {");
+        String len = randVariableName("len");
+        String i = randVariableName("i");
+        sb.append("{int " + len + " = DeseriUtil.getShort(is);");
+        sb.append("if (" + len + " > 0) {");
         sb.append(parameterizedType.getTypeName()).append(" list = new ArrayList<>();");
-        sb.append("for (int i = 0; i < len; i++) {");
+        sb.append("for (int " + i + " = 0; " + i + " < " + len + "; " + i + "++) {");
         sb.append("list.add(").append(getField4ReadStr(actualTypeArgument, "%s"));
         sb.append(");");
         sb.append("}");
@@ -136,19 +187,21 @@ public class SDFieldReadBuilder {
 
     }
 
-    public static String getField4ReadStrSet(ParameterizedType parameterizedType, String setValueStr){
+    public static String getField4ReadStrSet(ParameterizedType parameterizedType, String setValueStr) {
         Type[] actualTypeArguments = parameterizedType.getActualTypeArguments(); /*字段泛型类型*/
         Type actualTypeArgument = actualTypeArguments[0];
 
-        //System.out.println(actualTypeArgument.getTypeName());
-        //System.out.println(actualTypeArgument.getClass());\
+        //log.info(actualTypeArgument.getTypeName());
+        //log.info(actualTypeArgument.getClass());\
 
         String type = actualTypeArgument.getTypeName();
         StringBuilder sb = new StringBuilder();
-        sb.append("{int len = DeseriUtil.getShort(is);");
-        sb.append("if (len > 0) {");
+        String len = randVariableName("len");
+        String i = randVariableName("i");
+        sb.append("{int " + len + " = DeseriUtil.getShort(is);");
+        sb.append("if (" + len + " > 0) {");
         sb.append(parameterizedType.getTypeName()).append(" set = new HashSet<>();");
-        sb.append("for (int i = 0; i < len; i++) {");
+        sb.append("for (int " + i + " = 0; " + i + " < " + len + "; " + i + "++) {");
         sb.append("set.add(").append(getField4ReadStr(actualTypeArgument, "%s"));
         sb.append(");");
         sb.append("}");
@@ -157,14 +210,16 @@ public class SDFieldReadBuilder {
         return sb.toString();
     }
 
-    public static String getField4ReadStrArr(Class<?> componentType, String setValueStr){
+    public static String getField4ReadStrArr(Class<?> componentType, String setValueStr) {
         String type = componentType.getTypeName();
         StringBuilder sb = new StringBuilder();
-        sb.append("{int len = DeseriUtil.getShort(is);");
-        sb.append("if (len > 0) {");
-        sb.append(type).append("[] arr = new ").append(type).append("[len];");
-        sb.append("for (int i = 0; i < len; i++) {");
-        sb.append("arr[i] = ").append(getField4ReadStr(componentType, "%s"));
+        String len = randVariableName("len");
+        String i = randVariableName("i");
+        sb.append("{int " + len + " = DeseriUtil.getShort(is);");
+        sb.append("if (" + len + " > 0) {");
+        sb.append(type).append("[] arr = new ").append(type).append("["+len+"];");
+        sb.append("for (int " + i + " = 0; " + i + " < " + len + "; " + i + "++) {");
+        sb.append("arr[" + i + "] = ").append(getField4ReadStr(componentType, "%s"));
         sb.append(";}");
         sb.append(String.format(setValueStr, "arr"));
         sb.append("}}");

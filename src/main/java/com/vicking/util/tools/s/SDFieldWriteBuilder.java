@@ -1,5 +1,7 @@
 package com.vicking.util.tools.s;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
@@ -10,6 +12,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 
+@Slf4j
 public class SDFieldWriteBuilder {
 
     public static String field4Write(Class<?> clazz, String fieldName, boolean isPublic) throws IntrospectionException, NoSuchFieldException {
@@ -57,7 +60,7 @@ public class SDFieldWriteBuilder {
         } else if (propertyClass.isArray()) {
             Class<?> componentType = propertyClass.getComponentType();
             return getField4WriteStrArr(componentType, getValueStr);
-        } if (Map.class.isAssignableFrom(propertyClass)) {
+        } else if (Map.class.isAssignableFrom(propertyClass)) {
             return getField4WriteStrMap((ParameterizedType) propertyType, getValueStr);
         } else {
             return getField4WriteStr(propertyType, getValueStr);
@@ -94,15 +97,51 @@ public class SDFieldWriteBuilder {
         Type KT = actualTypeArguments[0];
         Type VT = actualTypeArguments[1];
 
-        //System.out.println(actualTypeArgument.getTypeName());
-        //System.out.println(actualTypeArgument.getClass());
+//        log.info("xxxx1");
+//        log.info(VT.getTypeName()); //java.util.ArrayList<java.lang.String>
+//        log.info(VT.getClass()); //class sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl'
+//        log.info(((ParameterizedType) VT).getRawType()); // class java.util.ArrayList
+//        log.info("xxxx2");
 
         StringBuilder sb = new StringBuilder();
         sb.append("if (").append(getValueStr).append(" == null) {").append(SeriUtilBuilder.putShort("0")).append("} else {");
         sb.append("SeriUtil.putShort(os, (short)").append(getValueStr).append(".size());");  // 写入长度
         sb.append("for (Map.Entry<").append(KT.getTypeName()).append(",").append(VT.getTypeName()).append("> entry : ").append(getValueStr).append(".entrySet()) {");
         sb.append(getField4WriteStr(KT, "entry.getKey()"));
-        sb.append(getField4WriteStr(VT, "entry.getValue()"));
+
+        Class<?> vtClass = null;
+        if (VT instanceof ParameterizedType) {
+            Type rawType = ((ParameterizedType) VT).getRawType();
+            try {
+                vtClass = Class.forName(rawType.getTypeName());
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        } else {
+            vtClass = (Class) VT;
+        }
+        //System.out.println(vtClass); // class java.util.ArrayList
+        if (Collection.class.isAssignableFrom(vtClass)) {
+            sb.append(getField4WriteStrCollection((ParameterizedType) VT, "entry.getValue()"));
+        } else if (vtClass.isArray()) {
+            Class<?> componentType = vtClass.getComponentType();
+            sb.append(getField4WriteStrArr(componentType, "entry.getValue()"));
+        } else if (Map.class.isAssignableFrom(vtClass)) {
+            sb.append(getField4WriteStrMap((ParameterizedType) VT, "entry.getValue()"));
+        } else {
+            sb.append(getField4WriteStr(VT, "entry.getValue()"));
+        }
+//        }
+//        if (Collection.class.isAssignableFrom(VT)) {
+//            return getField4WriteStrCollection((ParameterizedType) propertyType, getValueStr);
+//        } else if (VT.isArray()) {
+//            Class<?> componentType = propertyClass.getComponentType();
+//            return getField4WriteStrArr(componentType, getValueStr);
+//        } else if (Map.class.isAssignableFrom(propertyClass)) {
+//            return getField4WriteStrMap((ParameterizedType) propertyType, getValueStr);
+//        } else {
+//            sb.append(getField4WriteStr(VT, "entry.getValue()"));
+//        }
         sb.append("}}");
 
         return sb.toString();
@@ -112,8 +151,8 @@ public class SDFieldWriteBuilder {
         Type[] actualTypeArguments = parameterizedType.getActualTypeArguments(); /*字段泛型类型*/
         Type actualTypeArgument = actualTypeArguments[0];
 
-        //System.out.println(actualTypeArgument.getTypeName());
-        //System.out.println(actualTypeArgument.getClass());
+        //log.info(actualTypeArgument.getTypeName());
+        //log.info(actualTypeArgument.getClass());
 
         StringBuilder sb = new StringBuilder();
         sb.append("if (").append(getValueStr).append(" == null) {").append(SeriUtilBuilder.putShort("0")).append("} else {");
@@ -127,8 +166,8 @@ public class SDFieldWriteBuilder {
 
     public static String getField4WriteStrArr(Class<?> componentType, String getValueStr) {
 
-        //System.out.println(actualTypeArgument.getTypeName());
-        //System.out.println(actualTypeArgument.getClass());
+        //log.info(actualTypeArgument.getTypeName());
+        //log.info(actualTypeArgument.getClass());
 
         StringBuilder sb = new StringBuilder();
         sb.append("if (").append(getValueStr).append(" == null) {").append(SeriUtilBuilder.putShort("0")).append("} else {");
