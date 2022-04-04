@@ -28,61 +28,77 @@ public class SDBuilder {
         StringBuilder sb4Writer = new StringBuilder();
         StringBuilder sb4Reader = new StringBuilder();
 
+        boolean withSuperClassFields = true;
+
         Set<Field> publicFields = new HashSet<>();
         {
             boolean isPublic = true;
-            for (Field pubField : clazz.getFields()) {
-                SD_NO sd_no = pubField.getAnnotation(SD_NO.class);
-                if (sd_no != null) continue;
+            Class<?> searchType = clazz;
+            while (searchType != null) {
 
-                boolean isCurGroup = true;
+                for (Field pubField : searchType.getFields()) {
+                    SD_NO sd_no = pubField.getAnnotation(SD_NO.class);
+                    if (sd_no != null) continue;
 
-                if (groupName != null && !groupName.trim().equalsIgnoreCase("")) {
-                    SD_Group[] sd_groups = pubField.getAnnotationsByType(SD_Group.class);
-                    if (sd_groups.length > 0) isCurGroup = false;
+                    boolean isCurGroup = true;
 
-                    for (SD_Group sd_group : sd_groups) {
-                        if (sd_group != null && sd_group.value().equalsIgnoreCase(groupName)) {
-                            isCurGroup = true;
-                            break;
+                    if (groupName != null && !groupName.trim().equalsIgnoreCase("")) {
+                        SD_Group[] sd_groups = pubField.getAnnotationsByType(SD_Group.class);
+                        if (sd_groups.length > 0) isCurGroup = false;
+
+                        for (SD_Group sd_group : sd_groups) {
+                            if (sd_group != null && sd_group.value().equalsIgnoreCase(groupName)) {
+                                isCurGroup = true;
+                                break;
+                            }
                         }
+                    }
+
+                    if (isCurGroup) {
+                        sb4Writer.append(SDFieldWriteBuilder.field4Write(searchType, pubField, isPublic)).append(ENDTAG);
+                        sb4Reader.append(SDFieldReadBuilder.field4Read(searchType, pubField, isPublic)).append(ENDTAG);
+                        publicFields.add(pubField);
                     }
                 }
 
-                if (isCurGroup) {
-                    sb4Writer.append(SDFieldWriteBuilder.field4Write(clazz, pubField, isPublic)).append(ENDTAG);
-                    sb4Reader.append(SDFieldReadBuilder.field4Read(clazz, pubField, isPublic)).append(ENDTAG);
-                    publicFields.add(pubField);
-                }
+                searchType = withSuperClassFields ? searchType.getSuperclass() != Object.class ? searchType.getSuperclass() : null : null;
             }
         }
 
         {
             boolean isPublic = false;
-            for (Field declaredField : clazz.getDeclaredFields()) {
-                SD_NO sd_no = declaredField.getAnnotation(SD_NO.class);
-                if (sd_no != null) continue;
-                if (publicFields.contains(declaredField)) continue;
 
-                boolean isCurGroup = true;
+            Class<?> searchType = clazz;
+            while (searchType != null) {
 
-                if (groupName != null && !groupName.trim().equalsIgnoreCase("")) {
-                    SD_Group[] sd_groups = declaredField.getAnnotationsByType(SD_Group.class);
-                    if (sd_groups.length > 0) isCurGroup = false;
+                for (Field declaredField : searchType.getDeclaredFields()) {
+                    SD_NO sd_no = declaredField.getAnnotation(SD_NO.class);
+                    if (sd_no != null) continue;
+                    if (publicFields.contains(declaredField)) continue;
 
-                    for (SD_Group sd_group : sd_groups) {
-                        if (sd_group != null && sd_group.value().equalsIgnoreCase(groupName)) {
-                            isCurGroup = true;
-                            break;
+                    boolean isCurGroup = true;
+
+                    if (groupName != null && !groupName.trim().equalsIgnoreCase("")) {
+                        SD_Group[] sd_groups = declaredField.getAnnotationsByType(SD_Group.class);
+                        if (sd_groups.length > 0) isCurGroup = false;
+
+                        for (SD_Group sd_group : sd_groups) {
+                            if (sd_group != null && sd_group.value().equalsIgnoreCase(groupName)) {
+                                isCurGroup = true;
+                                break;
+                            }
                         }
+                    }
+
+                    if (isCurGroup) {
+                        sb4Writer.append(SDFieldWriteBuilder.field4Write(searchType, declaredField, isPublic)).append(ENDTAG);
+                        sb4Reader.append(SDFieldReadBuilder.field4Read(searchType, declaredField, isPublic)).append(ENDTAG);
                     }
                 }
 
-                if (isCurGroup) {
-                    sb4Writer.append(SDFieldWriteBuilder.field4Write(clazz, declaredField, isPublic)).append(ENDTAG);
-                    sb4Reader.append(SDFieldReadBuilder.field4Read(clazz, declaredField, isPublic)).append(ENDTAG);
-                }
+                searchType = withSuperClassFields ? searchType.getSuperclass() != Object.class ? searchType.getSuperclass() : null : null;
             }
+
         }
 
         //System.out.println(String.format(classWriter, sb4Writer));
