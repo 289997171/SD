@@ -16,13 +16,13 @@ public class Obj3 {
 //    public int iv3;
 //    public Integer iv4;
 
-//    private List<Boolean> bs1 = new ArrayList<>();
-//    public List<Boolean> bs2 = new ArrayList<>();
+    private List<Boolean> bs1;
+    public List<Boolean> bs2;
 
-    private Set<Boolean> bs3 = new HashSet<>();
-    public HashSet<Boolean> bs4 = new HashSet<>();
-//
-//    private boolean[] bs5;
-//    public boolean[] bs6;
+    private Set<Boolean> bs3;
+    public HashSet<Boolean> bs4;
+
+    private boolean[] bs5;
+    public boolean[] bs6;
 
 }

@@ -1,7 +1,5 @@
 package com.vicking.util.tools.s;
 
-import com.vicking.util.tools.d.DeseriCollectionUtilBuilder;
-
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;

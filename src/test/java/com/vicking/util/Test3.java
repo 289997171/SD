@@ -1,8 +1,6 @@
 package com.vicking.util;
 
-import com.vicking.util.tools.d.DeseriCollectionUtilBuilder;
 import com.vicking.util.tools.d.DeseriUtilBuilder;
-import com.vicking.util.tools.s.SeriCollectionUtilBuilder;
 import com.vicking.util.tools.s.SeriUtilBuilder;
 import org.junit.jupiter.api.Test;
 
@@ -14,26 +12,26 @@ public class Test3 {
     private String setValue1 = "o.setXXX(%s);";
     private String setValue2 = "o.xxx = %s;";
 
-    @Test
-    public void testBoolean() {
-//        System.out.println(SeriUtilBuilder.putBoolean(getValue1));
-//        System.out.println(SeriUtilBuilder.putBoolean(getValue2));
-
-        System.out.println(SeriCollectionUtilBuilder.putBooleans(getValue1));
-        System.out.println(SeriCollectionUtilBuilder.putBooleans(getValue2));
-
-        System.out.println(DeseriCollectionUtilBuilder.getBooleansList(setValue1));
-        System.out.println(DeseriCollectionUtilBuilder.getBooleansList(setValue2));
-
-        System.out.println(DeseriCollectionUtilBuilder.getBooleansSet(setValue1));
-        System.out.println(DeseriCollectionUtilBuilder.getBooleansSet(setValue2));
-
-        System.out.println(DeseriCollectionUtilBuilder.getBooleansArr(setValue1));
-        System.out.println(DeseriCollectionUtilBuilder.getBooleansArr(setValue2));
-
-//        System.out.println(DeseriUtilBuilder.getBoolean(setValue1));
-//        System.out.println(DeseriUtilBuilder.getBoolean(setValue2));
-    }
+//    @Test
+//    public void testBoolean() {
+////        System.out.println(SeriUtilBuilder.putBoolean(getValue1));
+////        System.out.println(SeriUtilBuilder.putBoolean(getValue2));
+//
+//        System.out.println(SeriCollectionUtilBuilder.putBooleans(getValue1));
+//        System.out.println(SeriCollectionUtilBuilder.putBooleans(getValue2));
+//
+//        System.out.println(DeseriCollectionUtilBuilder.getBooleansList(setValue1));
+//        System.out.println(DeseriCollectionUtilBuilder.getBooleansList(setValue2));
+//
+//        System.out.println(DeseriCollectionUtilBuilder.getBooleansSet(setValue1));
+//        System.out.println(DeseriCollectionUtilBuilder.getBooleansSet(setValue2));
+//
+//        System.out.println(DeseriCollectionUtilBuilder.getBooleansArr(setValue1));
+//        System.out.println(DeseriCollectionUtilBuilder.getBooleansArr(setValue2));
+//
+////        System.out.println(DeseriUtilBuilder.getBoolean(setValue1));
+////        System.out.println(DeseriUtilBuilder.getBoolean(setValue2));
+//    }
 
     @Test
     public void testDate() {

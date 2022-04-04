@@ -31,13 +31,13 @@ public class SDFieldReadBuilder {
     public static String field4Read(Class<?> clazz, Field field, boolean isPublic) throws IntrospectionException {
         Class<?> propertyClass;  // interface java.util.List
         Type propertyType; // java.util.List<java.lang.Boolean>
-        String getValueStr;
+        String setValueStr;
         if (isPublic) {
             propertyClass = field.getType();
             propertyType = field.getGenericType();
             // o.xxx
 
-            getValueStr = "o." + field.getName() + "= %s;";
+            setValueStr = "o." + field.getName() + "= %s;";
         } else {
             // 通过具有 getFoo 和 setFoo 访问器方法
             PropertyDescriptor propertyDescriptor = new PropertyDescriptor(field.getName(), clazz);
@@ -48,41 +48,41 @@ public class SDFieldReadBuilder {
             Method writeMethod = propertyDescriptor.getWriteMethod(); // setter
 
             // o.getXXX()
-            getValueStr = "o." + writeMethod.getName() + "(%s);";
+            setValueStr = "o." + writeMethod.getName() + "(%s);";
         }
 
         if (List.class.isAssignableFrom(propertyClass)) {
-            return getField4ReadStrList((ParameterizedType) propertyType, getValueStr);
+            return getField4ReadStrList((ParameterizedType) propertyType, setValueStr);
         } else if (Set.class.isAssignableFrom(propertyClass)) {
-            return getField4ReadStrSet((ParameterizedType) propertyType, getValueStr);
+            return getField4ReadStrSet((ParameterizedType) propertyType, setValueStr);
         } else if (propertyClass.isArray()) {
             Class<?> componentType = propertyClass.getComponentType();
-            return getField4ReadStrArr(componentType, getValueStr);
+            return getField4ReadStrArr(componentType, setValueStr);
         } else {
-            return getField4ReadStr(propertyType, getValueStr);
+            return getField4ReadStr(propertyType, setValueStr);
         }
 
     }
 
-    public static String getField4ReadStr(Type propertyType, String getValueStr) {
+    public static String getField4ReadStr(Type propertyType, String setValueStr) {
         if (propertyType == Date.class) {
-            return DeseriUtilBuilder.getDate(getValueStr);
+            return DeseriUtilBuilder.getDate(setValueStr);
         } else if (propertyType == double.class || propertyType == Double.class) {
-            return DeseriUtilBuilder.getDouble(getValueStr);
+            return DeseriUtilBuilder.getDouble(setValueStr);
         } else if (propertyType == float.class || propertyType == Float.class) {
-            return DeseriUtilBuilder.getFloat(getValueStr);
+            return DeseriUtilBuilder.getFloat(setValueStr);
         } else if (propertyType == byte.class || propertyType == Byte.class) {
-            return DeseriUtilBuilder.getByte(getValueStr);
+            return DeseriUtilBuilder.getByte(setValueStr);
         } else if (propertyType == short.class || propertyType == Short.class) {
-            return DeseriUtilBuilder.getShort(getValueStr);
+            return DeseriUtilBuilder.getShort(setValueStr);
         } else if (propertyType == int.class || propertyType == Integer.class) {
-            return DeseriUtilBuilder.getInt(getValueStr);
+            return DeseriUtilBuilder.getInt(setValueStr);
         } else if (propertyType == long.class || propertyType == Long.class) {
-            return DeseriUtilBuilder.getLong(getValueStr);
+            return DeseriUtilBuilder.getLong(setValueStr);
         } else if (propertyType == String.class) {
-            return DeseriUtilBuilder.getString(getValueStr);
+            return DeseriUtilBuilder.getString(setValueStr);
         } else if (propertyType == boolean.class || propertyType == Boolean.class) {
-            return DeseriUtilBuilder.getBoolean(getValueStr);
+            return DeseriUtilBuilder.getBoolean(setValueStr);
         }
 //        else if (Collection.class.isAssignableFrom(propertyType)) {
 //            throw new RuntimeException("尚未实现: " + propertyType);
@@ -98,38 +98,29 @@ public class SDFieldReadBuilder {
         }
     }
 
-    public static String getField4ReadStrList(ParameterizedType parameterizedType, String getValueStr){
+    public static String getField4ReadStrList(ParameterizedType parameterizedType, String setValueStr){
         Type[] actualTypeArguments = parameterizedType.getActualTypeArguments(); /*字段泛型类型*/
         Type actualTypeArgument = actualTypeArguments[0];
 
         System.out.println(actualTypeArgument.getTypeName());
         System.out.println(actualTypeArgument.getClass());
 
-        if (actualTypeArgument == Date.class) {
-            return DeseriCollectionUtilBuilder.getDatesList(getValueStr);
-        } else if (actualTypeArgument == double.class || actualTypeArgument == Double.class) {
-            return DeseriCollectionUtilBuilder.getDoublesList(getValueStr);
-        } else if (actualTypeArgument == float.class || actualTypeArgument == Float.class) {
-            return DeseriCollectionUtilBuilder.getFloatsList(getValueStr);
-        } else if (actualTypeArgument == byte.class || actualTypeArgument == Byte.class) {
-            return DeseriCollectionUtilBuilder.getBytesList(getValueStr);
-        } else if (actualTypeArgument == short.class || actualTypeArgument == Short.class) {
-            return DeseriCollectionUtilBuilder.getShortsList(getValueStr);
-        } else if (actualTypeArgument == int.class || actualTypeArgument == Integer.class) {
-            return DeseriCollectionUtilBuilder.getIntsList(getValueStr);
-        } else if (actualTypeArgument == long.class || actualTypeArgument == Long.class) {
-            return DeseriCollectionUtilBuilder.getLongsList(getValueStr);
-        } else if (actualTypeArgument == String.class) {
-            return DeseriCollectionUtilBuilder.getStringsList(getValueStr);
-        } else if (actualTypeArgument == boolean.class || actualTypeArgument == Boolean.class) {
-            return DeseriCollectionUtilBuilder.getBooleansList(getValueStr);
-        } else {
-            throw new RuntimeException("尚未实现: " + actualTypeArgument);
-        }
+        String type = actualTypeArgument.getTypeName();
+        StringBuilder sb = new StringBuilder();
+        sb.append("{int len = DeseriUtil.getShort(is);");
+        sb.append("if (len > 0) {");
+        sb.append("ArrayList<").append(type).append("> list = new ArrayList<>();");
+        sb.append("for (int i = 0; i < len; i++) {");
+        sb.append("list.add(").append(getField4ReadStr(actualTypeArgument, "%s"));
+        sb.append(");");
+        sb.append("}");
+        sb.append(String.format(setValueStr, "list"));
+        sb.append("}}");
+        return sb.toString();
 
     }
 
-    public static String getField4ReadStrSet(ParameterizedType parameterizedType, String getValueStr){
+    public static String getField4ReadStrSet(ParameterizedType parameterizedType, String setValueStr){
         Type[] actualTypeArguments = parameterizedType.getActualTypeArguments(); /*字段泛型类型*/
         Type actualTypeArgument = actualTypeArguments[0];
 
@@ -144,20 +135,23 @@ public class SDFieldReadBuilder {
         sb.append("for (int i = 0; i < len; i++) {");
         sb.append("set.add(").append(getField4ReadStr(actualTypeArgument, "%s"));
         sb.append(");");
-        sb.append("}}}");
+        sb.append("}");
+        sb.append(String.format(setValueStr, "set"));
+        sb.append("}}");
         return sb.toString();
     }
 
-    public static String getField4ReadStrArr(Class<?> componentType, String getValueStr){
+    public static String getField4ReadStrArr(Class<?> componentType, String setValueStr){
         String type = componentType.getTypeName();
         StringBuilder sb = new StringBuilder();
         sb.append("{int len = DeseriUtil.getShort(is);");
         sb.append("if (len > 0) {");
         sb.append(type).append("[] arr = new ").append(type).append("[len];");
         sb.append("for (int i = 0; i < len; i++) {");
-        sb.append("arr[i] = ").append(getField4ReadStr(componentType, getValueStr));
-        sb.append("}");
-        sb.append("}");
+        sb.append("arr[i] = ").append(getField4ReadStr(componentType, "%s"));
+        sb.append(";}");
+        sb.append(String.format(setValueStr, "arr"));
+        sb.append("}}");
         return sb.toString();
     }
 
