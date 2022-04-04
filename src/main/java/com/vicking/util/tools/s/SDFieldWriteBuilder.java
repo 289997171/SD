@@ -45,15 +45,21 @@ public class SDFieldWriteBuilder {
             getValueStr = "o." + field.getName();
         } else {
             // 通过具有 getFoo 和 setFoo 访问器方法
-            PropertyDescriptor propertyDescriptor = new PropertyDescriptor(field.getName(), clazz);
-            propertyClass = propertyDescriptor.getPropertyType();
-            propertyType = field.getGenericType();
+            try {
 
-            Method readMethod = propertyDescriptor.getReadMethod(); // getter
-            //Method writeMethod = propertyDescriptor.getWriteMethod(); // setter
+                PropertyDescriptor propertyDescriptor = new PropertyDescriptor(field.getName(), clazz);
+                propertyClass = propertyDescriptor.getPropertyType();
+                propertyType = field.getGenericType();
 
-            // o.getXXX()
-            getValueStr = "o." + readMethod.getName() + "()";
+                Method readMethod = propertyDescriptor.getReadMethod(); // getter
+                //Method writeMethod = propertyDescriptor.getWriteMethod(); // setter
+
+                // o.getXXX()
+                getValueStr = "o." + readMethod.getName() + "()";
+            } catch (Exception e) {
+                log.error("属性:" + field.getName() + " 没有set/get");
+                return "";
+            }
         }
 
         if (Collection.class.isAssignableFrom(propertyClass)) {

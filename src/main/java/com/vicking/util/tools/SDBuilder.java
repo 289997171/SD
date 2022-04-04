@@ -37,7 +37,7 @@ public class SDBuilder {
 
                 boolean isCurGroup = true;
 
-                if (groupName != null || !groupName.trim().equalsIgnoreCase("")) {
+                if (groupName != null && !groupName.trim().equalsIgnoreCase("")) {
                     SD_Group[] sd_groups = pubField.getAnnotationsByType(SD_Group.class);
                     if (sd_groups.length > 0) isCurGroup = false;
 
@@ -66,7 +66,7 @@ public class SDBuilder {
 
                 boolean isCurGroup = true;
 
-                if (groupName != null || !groupName.trim().equalsIgnoreCase("")) {
+                if (groupName != null && !groupName.trim().equalsIgnoreCase("")) {
                     SD_Group[] sd_groups = declaredField.getAnnotationsByType(SD_Group.class);
                     if (sd_groups.length > 0) isCurGroup = false;
 
@@ -122,10 +122,10 @@ public class SDBuilder {
     public static void genFiles(String groupName, String packageName, String classSimpleName, String sb4Writer, String sb4Reader) {
         try {
             String packagePath = packageName.replace(".", "/");
-            FileWriter fileWriter1 = new FileWriter("./src/test/java/" + packagePath + "/" + classSimpleName + (groupName == null ? "" : groupName) + "Writer.java");
+            FileWriter fileWriter1 = new FileWriter("./src/main/java/" + packagePath + "/" + classSimpleName + (groupName == null ? "" : groupName) + "Writer.java");
             fileWriter1.write(sb4Writer.toString());
             fileWriter1.flush();
-            FileWriter fileWriter2 = new FileWriter("./src/test/java/" + packagePath + "/" + classSimpleName + (groupName == null ? "" : groupName) + "Reader.java");
+            FileWriter fileWriter2 = new FileWriter("./src/main/java/" + packagePath + "/" + classSimpleName + (groupName == null ? "" : groupName) + "Reader.java");
             fileWriter2.write(sb4Reader.toString());
             fileWriter2.flush();
         } catch (IOException e) {
