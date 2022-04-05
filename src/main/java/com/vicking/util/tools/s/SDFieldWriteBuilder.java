@@ -126,8 +126,8 @@ public class SDFieldWriteBuilder {
 
         StringBuilder sb = new StringBuilder();
         String entry = randVariableName("entry");
-        sb.append("if (").append(getValueStr).append(" == null) {").append(SeriUtilBuilder.putShort("0")).append("} else {");
-        sb.append("SeriUtil.putShort(os, (short)").append(getValueStr).append(".size());");  // 写入长度
+        sb.append("if (").append(getValueStr).append(" == null) {").append(SeriUtilBuilder.putInt("0")).append("} else {");
+        sb.append("SeriUtil.putVarInt(os, ").append(getValueStr).append(".size());");  // 写入长度
         sb.append("for (Map.Entry<").append(KT.getTypeName()).append(",").append(VT.getTypeName()).append("> "+entry+" : ").append(getValueStr).append(".entrySet()) {");
         sb.append(getField4WriteStr(KT, entry + ".getKey()"));
 
@@ -168,8 +168,8 @@ public class SDFieldWriteBuilder {
 
         StringBuilder sb = new StringBuilder();
         String item = randVariableName("item");
-        sb.append("if (").append(getValueStr).append(" == null) {").append(SeriUtilBuilder.putShort("0")).append("} else {");
-        sb.append("SeriUtil.putShort(os, (short)").append(getValueStr).append(".size());");  // 写入长度
+        sb.append("if (").append(getValueStr).append(" == null) {").append(SeriUtilBuilder.putInt("0")).append("} else {");
+        sb.append("SeriUtil.putVarInt(os, ").append(getValueStr).append(".size());");  // 写入长度
         sb.append("for (").append(actualTypeArgument.getTypeName()).append(" "+item+" : ").append(getValueStr).append(") {");
         sb.append(getField4WriteStr(actualTypeArgument, item));
         sb.append("}}");
@@ -184,8 +184,8 @@ public class SDFieldWriteBuilder {
 
         StringBuilder sb = new StringBuilder();
         String item = randVariableName("item");
-        sb.append("if (").append(getValueStr).append(" == null) {").append(SeriUtilBuilder.putShort("0")).append("} else {");
-        sb.append("SeriUtil.putShort(os, (short)").append(getValueStr).append(".length);");  // 写入长度
+        sb.append("if (").append(getValueStr).append(" == null) {").append(SeriUtilBuilder.putInt("0")).append("} else {");
+        sb.append("SeriUtil.putVarInt(os, ").append(getValueStr).append(".length);");  // 写入长度
         sb.append("for (").append(componentType.getTypeName()).append(" "+item+" : ").append(getValueStr).append(") {");
         sb.append(getField4WriteStr(componentType, item));
         sb.append("}}");

@@ -6,213 +6,42 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-
 public class Obj3Writer {
-    public static void write(OutputStream os, Obj3 o) throws IOException {
-        if (o == null) {
-            os.write(0);
-            return;
-        }
-        os.write(1);
-        SeriUtil.putInt(os, o.iv3);
-        SeriUtil.putInt(os, o.iv4);
-        if (o.bs2 == null) {
-            SeriUtil.putShort(os, 0);
-        } else {
-            SeriUtil.putShort(os, (short) o.bs2.size());
-            for (Boolean itemL6ufvY : o.bs2) {
-                SeriUtil.putBoolean(os, itemL6ufvY);
-            }
-        }
-        if (o.bs4 == null) {
-            SeriUtil.putShort(os, 0);
-        } else {
-            SeriUtil.putShort(os, (short) o.bs4.size());
-            for (Boolean itemglR4hF : o.bs4) {
-                SeriUtil.putBoolean(os, itemglR4hF);
-            }
-        }
-        if (o.bs6 == null) {
-            SeriUtil.putShort(os, 0);
-        } else {
-            SeriUtil.putShort(os, (short) o.bs6.length);
-            for (boolean itemPrXpDL : o.bs6) {
-                SeriUtil.putBoolean(os, itemPrXpDL);
-            }
-        }
-        if (o.obj42 == null) {
-            SeriUtil.putShort(os, 0);
-        } else {
-            SeriUtil.putShort(os, (short) o.obj42.size());
-            for (Obj4 itemjGRi6h : o.obj42) {
-                Obj4Writer.write(os, itemjGRi6h);
-            }
-        }
-        if (o.obj44 == null) {
-            SeriUtil.putShort(os, 0);
-        } else {
-            SeriUtil.putShort(os, (short) o.obj44.size());
-            for (Obj4 itemPTPoSE : o.obj44) {
-                Obj4Writer.write(os, itemPTPoSE);
-            }
-        }
-        if (o.obj46 == null) {
-            SeriUtil.putShort(os, 0);
-        } else {
-            SeriUtil.putShort(os, (short) o.obj46.length);
-            for (Obj4 itemLO3nat : o.obj46) {
-                Obj4Writer.write(os, itemLO3nat);
-            }
-        }
-        if (o.map6 == null) {
-            SeriUtil.putShort(os, 0);
-        } else {
-            SeriUtil.putShort(os, (short) o.map6.size());
-            for (Map.Entry<Integer, HashMap<Integer, HashMap<Integer, Float>>> entryPiJPes : o.map6.entrySet()) {
-                SeriUtil.putInt(os, entryPiJPes.getKey());
-                if (entryPiJPes.getValue() == null) {
-                    SeriUtil.putShort(os, 0);
-                } else {
-                    SeriUtil.putShort(os, (short) entryPiJPes.getValue().size());
-                    for (Map.Entry<Integer, HashMap<Integer, Float>> entryTXjyVH : entryPiJPes.getValue().entrySet()) {
-                        SeriUtil.putInt(os, entryTXjyVH.getKey());
-                        if (entryTXjyVH.getValue() == null) {
-                            SeriUtil.putShort(os, 0);
-                        } else {
-                            SeriUtil.putShort(os, (short) entryTXjyVH.getValue().size());
-                            for (Map.Entry<Integer, Float> entryTWYOFu : entryTXjyVH.getValue().entrySet()) {
-                                SeriUtil.putInt(os, entryTWYOFu.getKey());
-                                SeriUtil.putFloat(os, entryTWYOFu.getValue());
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        SeriUtil.putInt(os, o.getIv());
-        SeriUtil.putInt(os, o.getIv2());
-        if (o.getBs1() == null) {
-            SeriUtil.putShort(os, 0);
-        } else {
-            SeriUtil.putShort(os, (short) o.getBs1().size());
-            for (Boolean itemNbp3H1 : o.getBs1()) {
-                SeriUtil.putBoolean(os, itemNbp3H1);
-            }
-        }
-        if (o.getBs3() == null) {
-            SeriUtil.putShort(os, 0);
-        } else {
-            SeriUtil.putShort(os, (short) o.getBs3().size());
-            for (Boolean itemJJQkIL : o.getBs3()) {
-                SeriUtil.putBoolean(os, itemJJQkIL);
-            }
-        }
-        if (o.getBs5() == null) {
-            SeriUtil.putShort(os, 0);
-        } else {
-            SeriUtil.putShort(os, (short) o.getBs5().length);
-            for (boolean itemcFdTCM : o.getBs5()) {
-                SeriUtil.putBoolean(os, itemcFdTCM);
-            }
-        }
-        Obj4Writer.write(os, o.getObj4());
-        if (o.getObj41() == null) {
-            SeriUtil.putShort(os, 0);
-        } else {
-            SeriUtil.putShort(os, (short) o.getObj41().size());
-            for (Obj4 itemVcJ4Is : o.getObj41()) {
-                Obj4Writer.write(os, itemVcJ4Is);
-            }
-        }
-        if (o.getObj43() == null) {
-            SeriUtil.putShort(os, 0);
-        } else {
-            SeriUtil.putShort(os, (short) o.getObj43().size());
-            for (Obj4 item9NyyzT : o.getObj43()) {
-                Obj4Writer.write(os, item9NyyzT);
-            }
-        }
-        if (o.getObj45() == null) {
-            SeriUtil.putShort(os, 0);
-        } else {
-            SeriUtil.putShort(os, (short) o.getObj45().length);
-            for (Obj4 itemnIzHOy : o.getObj45()) {
-                Obj4Writer.write(os, itemnIzHOy);
-            }
-        }
-        if (o.getMap1() == null) {
-            SeriUtil.putShort(os, 0);
-        } else {
-            SeriUtil.putShort(os, (short) o.getMap1().size());
-            for (Map.Entry<Integer, String> entry59wLwy : o.getMap1().entrySet()) {
-                SeriUtil.putInt(os, entry59wLwy.getKey());
-                SeriUtil.putString(os, entry59wLwy.getValue());
-            }
-        }
-        if (o.getMap2() == null) {
-            SeriUtil.putShort(os, 0);
-        } else {
-            SeriUtil.putShort(os, (short) o.getMap2().size());
-            for (Map.Entry<Integer, ArrayList<String>> entryyjV2rW : o.getMap2().entrySet()) {
-                SeriUtil.putInt(os, entryyjV2rW.getKey());
-                if (entryyjV2rW.getValue() == null) {
-                    SeriUtil.putShort(os, 0);
-                } else {
-                    SeriUtil.putShort(os, (short) entryyjV2rW.getValue().size());
-                    for (String itemEviJf8 : entryyjV2rW.getValue()) {
-                        SeriUtil.putString(os, itemEviJf8);
-                    }
-                }
-            }
-        }
-        if (o.getMap3() == null) {
-            SeriUtil.putShort(os, 0);
-        } else {
-            SeriUtil.putShort(os, (short) o.getMap3().size());
-            for (Map.Entry<Integer, HashSet<String>> entry5qKA2B : o.getMap3().entrySet()) {
-                SeriUtil.putInt(os, entry5qKA2B.getKey());
-                if (entry5qKA2B.getValue() == null) {
-                    SeriUtil.putShort(os, 0);
-                } else {
-                    SeriUtil.putShort(os, (short) entry5qKA2B.getValue().size());
-                    for (String itemZKZL1L : entry5qKA2B.getValue()) {
-                        SeriUtil.putString(os, itemZKZL1L);
-                    }
-                }
-            }
-        }
-        if (o.getMap4() == null) {
-            SeriUtil.putShort(os, 0);
-        } else {
-            SeriUtil.putShort(os, (short) o.getMap4().size());
-            for (Map.Entry<Integer, String[]> entryOMTD2Z : o.getMap4().entrySet()) {
-                SeriUtil.putInt(os, entryOMTD2Z.getKey());
-                if (entryOMTD2Z.getValue() == null) {
-                    SeriUtil.putShort(os, 0);
-                } else {
-                    SeriUtil.putShort(os, (short) entryOMTD2Z.getValue().length);
-                    for (String item4IzxwO : entryOMTD2Z.getValue()) {
-                        SeriUtil.putString(os, item4IzxwO);
-                    }
-                }
-            }
-        }
-        if (o.getMap5() == null) {
-            SeriUtil.putShort(os, 0);
-        } else {
-            SeriUtil.putShort(os, (short) o.getMap5().size());
-            for (Map.Entry<Integer, boolean[]> entryQPgVZ1 : o.getMap5().entrySet()) {
-                SeriUtil.putInt(os, entryQPgVZ1.getKey());
-                if (entryQPgVZ1.getValue() == null) {
-                    SeriUtil.putShort(os, 0);
-                } else {
-                    SeriUtil.putShort(os, (short) entryQPgVZ1.getValue().length);
-                    for (boolean itembyFkBP : entryQPgVZ1.getValue()) {
-                        SeriUtil.putBoolean(os, itembyFkBP);
-                    }
-                }
-            }
-        }
+	public static void write(OutputStream os,Obj3 o) throws IOException {
+		if (o == null) {
+			os.write(0);
+			return;
+		}
+		os.write(1);
+		SeriUtil.putVarInt(os, o.iv3);
+SeriUtil.putVarInt(os, o.iv4);
+if (o.bs2 == null) {SeriUtil.putVarInt(os, 0);} else {SeriUtil.putVarInt(os, o.bs2.size());for (Boolean itemJc8K4F : o.bs2) {SeriUtil.putBoolean(os, itemJc8K4F);}}
+if (o.bs4 == null) {SeriUtil.putVarInt(os, 0);} else {SeriUtil.putVarInt(os, o.bs4.size());for (Boolean itemHUnj2S : o.bs4) {SeriUtil.putBoolean(os, itemHUnj2S);}}
+if (o.bs6 == null) {SeriUtil.putVarInt(os, 0);} else {SeriUtil.putVarInt(os, o.bs6.length);for (boolean itemWMfnIJ : o.bs6) {SeriUtil.putBoolean(os, itemWMfnIJ);}}
+if (o.obj42 == null) {SeriUtil.putVarInt(os, 0);} else {SeriUtil.putVarInt(os, o.obj42.size());for (Obj4 itemXxpjG2 : o.obj42) {
+    Obj4Writer.write(os, itemXxpjG2);}}
+if (o.obj44 == null) {SeriUtil.putVarInt(os, 0);} else {SeriUtil.putVarInt(os, o.obj44.size());for (Obj4 itemGxGPFV : o.obj44) {
+    Obj4Writer.write(os, itemGxGPFV);}}
+if (o.obj46 == null) {SeriUtil.putVarInt(os, 0);} else {SeriUtil.putVarInt(os, o.obj46.length);for (Obj4 item3uRuFW : o.obj46) {
+    Obj4Writer.write(os, item3uRuFW);}}
+if (o.map6 == null) {SeriUtil.putVarInt(os, 0);} else {SeriUtil.putVarInt(os, o.map6.size());for (Map.Entry<Integer, HashMap<Integer, HashMap<Integer, Float>>> entry2Z4MZU : o.map6.entrySet()) {SeriUtil.putVarInt(os, entry2Z4MZU.getKey());if (entry2Z4MZU.getValue() == null) {SeriUtil.putVarInt(os, 0);} else {SeriUtil.putVarInt(os, entry2Z4MZU.getValue().size());for (Map.Entry<Integer, HashMap<Integer, Float>> entryF9T1uV : entry2Z4MZU.getValue().entrySet()) {SeriUtil.putVarInt(os, entryF9T1uV.getKey());if (entryF9T1uV.getValue() == null) {SeriUtil.putVarInt(os, 0);} else {SeriUtil.putVarInt(os, entryF9T1uV.getValue().size());for (Map.Entry<Integer, Float> entry3YGyAo : entryF9T1uV.getValue().entrySet()) {SeriUtil.putVarInt(os, entry3YGyAo.getKey());SeriUtil.putFloat(os, entry3YGyAo.getValue());}}}}}}
+SeriUtil.putVarInt(os, o.getIv());
+SeriUtil.putVarInt(os, o.getIv2());
+if (o.getBs1() == null) {SeriUtil.putVarInt(os, 0);} else {SeriUtil.putVarInt(os, o.getBs1().size());for (Boolean itemqmKPtP : o.getBs1()) {SeriUtil.putBoolean(os, itemqmKPtP);}}
+if (o.getBs3() == null) {SeriUtil.putVarInt(os, 0);} else {SeriUtil.putVarInt(os, o.getBs3().size());for (Boolean itemslI7kD : o.getBs3()) {SeriUtil.putBoolean(os, itemslI7kD);}}
+if (o.getBs5() == null) {SeriUtil.putVarInt(os, 0);} else {SeriUtil.putVarInt(os, o.getBs5().length);for (boolean itemxFKRPL : o.getBs5()) {SeriUtil.putBoolean(os, itemxFKRPL);}}
+Obj4Writer.write(os, o.getObj4());
+if (o.getObj41() == null) {SeriUtil.putVarInt(os, 0);} else {SeriUtil.putVarInt(os, o.getObj41().size());for (Obj4 itemIsr3gQ : o.getObj41()) {
+    Obj4Writer.write(os, itemIsr3gQ);}}
+if (o.getObj43() == null) {SeriUtil.putVarInt(os, 0);} else {SeriUtil.putVarInt(os, o.getObj43().size());for (Obj4 itemZXJz15 : o.getObj43()) {
+    Obj4Writer.write(os, itemZXJz15);}}
+if (o.getObj45() == null) {SeriUtil.putVarInt(os, 0);} else {SeriUtil.putVarInt(os, o.getObj45().length);for (Obj4 itemFL1r9E : o.getObj45()) {
+    Obj4Writer.write(os, itemFL1r9E);}}
+if (o.getMap1() == null) {SeriUtil.putVarInt(os, 0);} else {SeriUtil.putVarInt(os, o.getMap1().size());for (Map.Entry<Integer, String> entryWRDku9 : o.getMap1().entrySet()) {SeriUtil.putVarInt(os, entryWRDku9.getKey());SeriUtil.putString(os, entryWRDku9.getValue());}}
+if (o.getMap2() == null) {SeriUtil.putVarInt(os, 0);} else {SeriUtil.putVarInt(os, o.getMap2().size());for (Map.Entry<Integer, ArrayList<String>> entryBJ8BNn : o.getMap2().entrySet()) {SeriUtil.putVarInt(os, entryBJ8BNn.getKey());if (entryBJ8BNn.getValue() == null) {SeriUtil.putVarInt(os, 0);} else {SeriUtil.putVarInt(os, entryBJ8BNn.getValue().size());for (String item72OOBl : entryBJ8BNn.getValue()) {SeriUtil.putString(os, item72OOBl);}}}}
+if (o.getMap3() == null) {SeriUtil.putVarInt(os, 0);} else {SeriUtil.putVarInt(os, o.getMap3().size());for (Map.Entry<Integer, HashSet<String>> entryPzZFjQ : o.getMap3().entrySet()) {SeriUtil.putVarInt(os, entryPzZFjQ.getKey());if (entryPzZFjQ.getValue() == null) {SeriUtil.putVarInt(os, 0);} else {SeriUtil.putVarInt(os, entryPzZFjQ.getValue().size());for (String itemK0vWDl : entryPzZFjQ.getValue()) {SeriUtil.putString(os, itemK0vWDl);}}}}
+if (o.getMap4() == null) {SeriUtil.putVarInt(os, 0);} else {SeriUtil.putVarInt(os, o.getMap4().size());for (Map.Entry<Integer, String[]> entryBdKJzI : o.getMap4().entrySet()) {SeriUtil.putVarInt(os, entryBdKJzI.getKey());if (entryBdKJzI.getValue() == null) {SeriUtil.putVarInt(os, 0);} else {SeriUtil.putVarInt(os, entryBdKJzI.getValue().length);for (String itemm6c6V6 : entryBdKJzI.getValue()) {SeriUtil.putString(os, itemm6c6V6);}}}}
+if (o.getMap5() == null) {SeriUtil.putVarInt(os, 0);} else {SeriUtil.putVarInt(os, o.getMap5().size());for (Map.Entry<Integer,boolean[]> entryrUPHuI : o.getMap5().entrySet()) {SeriUtil.putVarInt(os, entryrUPHuI.getKey());if (entryrUPHuI.getValue() == null) {SeriUtil.putVarInt(os, 0);} else {SeriUtil.putVarInt(os, entryrUPHuI.getValue().length);for (boolean itemZVIhca : entryrUPHuI.getValue()) {SeriUtil.putBoolean(os, itemZVIhca);}}}}
 
-    }
+	}
 }

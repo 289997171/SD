@@ -48,10 +48,6 @@ public class SeriUtil {
         }
     }
 
-    public static void putSize(OutputStream os, int x) throws IOException {
-        putVarInt(os, x);
-    }
-
     public static void putShort(OutputStream os, short x) throws IOException {
         putVarInt(os, x);
     }

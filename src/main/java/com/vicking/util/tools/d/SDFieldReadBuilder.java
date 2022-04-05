@@ -141,7 +141,7 @@ public class SDFieldReadBuilder {
         String _k = randVariableName("_k");
         String _v = randVariableName("_v");
         StringBuilder sb = new StringBuilder();
-        sb.append("{int " + len + " = DeseriUtil.getShort(is);");
+        sb.append("{int " + len + " = DeseriUtil.getInt(is);");
         sb.append("if (" + len + " > 0) {");
         sb.append(parameterizedType.getTypeName()).append(" "+map+" = new ").append(parameterizedType.getTypeName()).append("();");
         sb.append("for (int " + i + " = 0; " + i + " < " + len + "; " + i + "++) {");
@@ -202,7 +202,7 @@ public class SDFieldReadBuilder {
         String len = randVariableName("len");
         String i = randVariableName("i");
         String list = randVariableName("list");
-        sb.append("{int " + len + " = DeseriUtil.getShort(is);");
+        sb.append("{int " + len + " = DeseriUtil.getInt(is);");
         sb.append("if (" + len + " > 0) {");
         sb.append(parameterizedType.getTypeName()).append(" "+list+" = new ArrayList<>();");
         sb.append("for (int " + i + " = 0; " + i + " < " + len + "; " + i + "++) {");
@@ -227,7 +227,7 @@ public class SDFieldReadBuilder {
         String len = randVariableName("len");
         String i = randVariableName("i");
         String set = randVariableName("set");
-        sb.append("{int " + len + " = DeseriUtil.getShort(is);");
+        sb.append("{int " + len + " = DeseriUtil.getInt(is);");
         sb.append("if (" + len + " > 0) {");
         sb.append(parameterizedType.getTypeName()).append(" "+set+" = new HashSet<>();");
         sb.append("for (int " + i + " = 0; " + i + " < " + len + "; " + i + "++) {");
@@ -245,7 +245,7 @@ public class SDFieldReadBuilder {
         String len = randVariableName("len");
         String i = randVariableName("i");
         String arr = randVariableName("arr");
-        sb.append("{int " + len + " = DeseriUtil.getShort(is);");
+        sb.append("{int " + len + " = DeseriUtil.getInt(is);");
         sb.append("if (" + len + " > 0) {");
         sb.append(type).append("[] "+arr+" = new ").append(type).append("["+len+"];");
         sb.append("for (int " + i + " = 0; " + i + " < " + len + "; " + i + "++) {");

@@ -23,15 +23,15 @@ public class SeriUtilBuilder {
     }
 
     public static String putShort(String value) {
-        return String.format("SeriUtil.putShort(os, %s);", value);
+        return String.format("SeriUtil.putVarInt(os, %s);", value);
     }
 
     public static String putInt(String value) {
-        return String.format("SeriUtil.putInt(os, %s);", value);
+        return String.format("SeriUtil.putVarInt(os, %s);", value);
     }
 
     public static String putLong(String value) {
-        return String.format("SeriUtil.putLong(os, %s);", value);
+        return String.format("SeriUtil.putVarInt(os, %s);", value);
     }
 
     public static String putString(String value) {

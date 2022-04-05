@@ -35,16 +35,6 @@ public class DeseriUtil {
     }
 
     /**
-     * 使用sort当size
-     * @param is
-     * @return
-     * @throws IOException
-     */
-    public static int getSize(InputStream is) throws IOException {
-        return (int) getVarInt(is, 3);
-    }
-
-    /**
      * 读取变长整数
      *
      * @param maxBytes 最多读几个字节，short:3，int:5，long:10

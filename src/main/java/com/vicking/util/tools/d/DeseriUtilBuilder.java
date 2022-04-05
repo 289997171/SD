@@ -23,16 +23,16 @@ public class DeseriUtilBuilder {
     }
 
     public static String getShort(String value) {
-        return String.format(value, "DeseriUtil.getShort(is)");
+        return String.format(value, "(short)DeseriUtil.getVarInt(is, 3)");
     }
 
     public static String getInt(String value) {
-        return String.format(value, "DeseriUtil.getInt(is)");
+        return String.format(value, "(int)DeseriUtil.getVarInt(is, 5)");
     }
 
 
     public static String getLong(String value) {
-        return String.format(value, "DeseriUtil.getLong(is)");
+        return String.format(value, "DeseriUtil.getVarInt(is, 10)");
     }
 
     public static String getString(String value) {
