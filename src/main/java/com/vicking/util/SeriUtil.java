@@ -16,27 +16,12 @@ public class SeriUtil {
     }
 
     public static void putDate(OutputStream os, Date x) throws IOException {
-        long v = x.getTime();
-        //os.write((byte) (v >> 56));
-        //os.write((byte) (v >> 48));
-        os.write((byte) (v >> 40));
-        os.write((byte) (v >> 32));
-        os.write((byte) (v >> 24));
-        os.write((byte) (v >> 16));
-        os.write((byte) (v >> 8));
-        os.write((byte) v);
+        putVarInt(os, x.getTime());
     }
 
     public static void putDouble(OutputStream os, double x) throws IOException {
-        long v = Double.doubleToRawLongBits(x);
-        os.write((byte) (v >> 56));
-        os.write((byte) (v >> 48));
-        os.write((byte) (v >> 40));
-        os.write((byte) (v >> 32));
-        os.write((byte) (v >> 24));
-        os.write((byte) (v >> 16));
-        os.write((byte) (v >> 8));
-        os.write((byte) v);
+        long temp = Double.doubleToLongBits(x);
+        putVarInt(os, temp);
     }
 
     public static void putByte(OutputStream os, byte x) throws IOException {
@@ -44,54 +29,51 @@ public class SeriUtil {
     }
 
     public static void putFloat(OutputStream os, float x) throws IOException {
-        int v = Float.floatToRawIntBits(x);
-        os.write((byte) (v >> 24));
-        os.write((byte) (v >> 16));
-        os.write((byte) (v >> 8));
-        os.write((byte) v);
+        int temp = Float.floatToIntBits(x);
+        putVarInt(os, temp);
     }
 
-    public static void putShort(OutputStream os, short x) throws IOException {
-        os.write((byte) (x >> 8));
-        os.write((byte) x);
-    }
+    public static void putVarInt(OutputStream os, long n) throws IOException {
+        //ZigZag编码
+        n = (n << 1) ^ (n >> 63);
 
-    public static void putShort(OutputStream os, int x) throws IOException {
-        os.write((byte) (x >> 8));
-        os.write((byte) x);
+        while (true) {
+            if ((n & ~0x7F) == 0) {
+                os.write((byte) (n & 0x7F));
+                return;
+            } else {
+                os.write((byte) (n & 0x7F | 0x80));
+                n >>>= 7;
+            }
+        }
     }
 
     public static void putSize(OutputStream os, int x) throws IOException {
-        os.write((byte) (x >> 24));
-        os.write((byte) (x >> 16));
-        os.write((byte) (x >> 8));
-        os.write((byte) x);
+        putVarInt(os, x);
+    }
+
+    public static void putShort(OutputStream os, short x) throws IOException {
+        putVarInt(os, x);
+    }
+
+    public static void putShort(OutputStream os, int x) throws IOException {
+        putVarInt(os, x);
     }
 
     public static void putInt(OutputStream os, int x) throws IOException {
-        os.write((byte) (x >> 24));
-        os.write((byte) (x >> 16));
-        os.write((byte) (x >> 8));
-        os.write((byte) x);
+        putVarInt(os, x);
     }
 
     public static void putLong(OutputStream os, long x) throws IOException {
-        os.write((byte) (x >> 56));
-        os.write((byte) (x >> 48));
-        os.write((byte) (x >> 40));
-        os.write((byte) (x >> 32));
-        os.write((byte) (x >> 24));
-        os.write((byte) (x >> 16));
-        os.write((byte) (x >> 8));
-        os.write((byte) x);
+        putVarInt(os, x);
     }
 
     public static void putString(OutputStream os, String s) throws IOException {
         if (s == null || s.equalsIgnoreCase("")) {
-            putShort(os, (short) 0);
+            putVarInt(os, 0);
         } else {
             byte[] bytes = s.getBytes(StandardCharsets.UTF_8);
-            putShort(os, (short)bytes.length);
+            putVarInt(os, bytes.length);
             os.write(bytes);
         }
     }

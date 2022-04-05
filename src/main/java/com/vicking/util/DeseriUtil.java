@@ -12,36 +12,18 @@ public class DeseriUtil {
     }
 
     public static Date getDate(InputStream is) throws IOException {
-        long v = (
-                //(((long) is.read()) << 56) |
-                //(((long) is.read() & 0xff) << 48) |
-                (((long) is.read() & 0xff) << 40) |
-                (((long) is.read() & 0xff) << 32) |
-                (((long) is.read() & 0xff) << 24) |
-                (((long) is.read() & 0xff) << 16) |
-                (((long) is.read() & 0xff) << 8) |
-                (((long) is.read() & 0xff)));
+        long v = getVarInt(is, 10);
         return new Date(v);
     }
 
     public static double getDouble(InputStream is) throws IOException {
-        long v =((((long) is.read()) << 56) |
-                (((long) is.read() & 0xff) << 48) |
-                (((long) is.read() & 0xff) << 40) |
-                (((long) is.read() & 0xff) << 32) |
-                (((long) is.read() & 0xff) << 24) |
-                (((long) is.read() & 0xff) << 16) |
-                (((long) is.read() & 0xff) << 8) |
-                (((long) is.read() & 0xff)));
-        return Double.longBitsToDouble(v);
+        long x = getVarInt(is, 10);
+        return Double.longBitsToDouble(x);
     }
 
     public static float getFloat(InputStream is) throws IOException {
-        int v =(((is.read()) << 24) |
-                ((is.read() & 0xff) << 16) |
-                ((is.read() & 0xff) << 8) |
-                ((is.read() & 0xff)));
-        return Float.intBitsToFloat(v);
+        int x = (int) getVarInt(is, 5);
+        return Float.intBitsToFloat(x);
     }
 
     public static byte getByte(InputStream is) throws IOException {
@@ -49,38 +31,54 @@ public class DeseriUtil {
     }
 
     public static short getShort(InputStream is) throws IOException {
-        return (short) (((is.read() & 0xff) << 8) |
-                ((is.read() & 0xff)));
+        return (short) getVarInt(is, 3);
     }
 
+    /**
+     * 使用sort当size
+     * @param is
+     * @return
+     * @throws IOException
+     */
     public static int getSize(InputStream is) throws IOException {
-        return (((is.read()) << 24) |
-                ((is.read() & 0xff) << 16) |
-                ((is.read() & 0xff) << 8) |
-                ((is.read() & 0xff)));
+        return (int) getVarInt(is, 3);
+    }
+
+    /**
+     * 读取变长整数
+     *
+     * @param maxBytes 最多读几个字节，short:3，int:5，long:10
+     */
+    public static long getVarInt(InputStream is, int maxBytes) throws IOException {
+        long temp = 0;
+        int shift = 0;
+        int count = 0;
+
+        while (count < maxBytes) {
+            final int b = is.read();
+            temp |= (b & 0x7FL) << shift;
+            shift += 7;
+            count++;
+
+            if ((b & 0x80) == 0) { // 128
+                //ZigZag解码
+                return (temp >>> 1) ^ -(temp & 1);
+            }
+        }
+        throw new RuntimeException("读数据出错");
     }
 
     public static int getInt(InputStream is) throws IOException {
-        return (((is.read()) << 24) |
-                ((is.read() & 0xff) << 16) |
-                ((is.read() & 0xff) << 8) |
-                ((is.read() & 0xff)));
+        return (int) getVarInt(is, 5);
     }
 
 
     public static long getLong(InputStream is) throws IOException {
-        return ((((long) is.read()) << 56) |
-                (((long) is.read() & 0xff) << 48) |
-                (((long) is.read() & 0xff) << 40) |
-                (((long) is.read() & 0xff) << 32) |
-                (((long) is.read() & 0xff) << 24) |
-                (((long) is.read() & 0xff) << 16) |
-                (((long) is.read() & 0xff) << 8) |
-                (((long) is.read() & 0xff)));
+        return  getVarInt(is, 10);
     }
 
     public static String getString(InputStream is) throws IOException {
-        int len = getShort(is);
+        int len = getInt(is);
         if (len == 0) {
             return "";
         } else {
