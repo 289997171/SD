@@ -16,7 +16,7 @@ public class SeriUtil {
     }
 
     public static void putDate(OutputStream os, Date x) throws IOException {
-        long v = (long)x.getTime();
+        long v = x.getTime();
         //os.write((byte) (v >> 56));
         //os.write((byte) (v >> 48));
         os.write((byte) (v >> 40));
