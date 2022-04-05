@@ -61,6 +61,13 @@ public class SeriUtil {
         os.write((byte) x);
     }
 
+    public static void putSize(OutputStream os, int x) throws IOException {
+        os.write((byte) (x >> 24));
+        os.write((byte) (x >> 16));
+        os.write((byte) (x >> 8));
+        os.write((byte) x);
+    }
+
     public static void putInt(OutputStream os, int x) throws IOException {
         os.write((byte) (x >> 24));
         os.write((byte) (x >> 16));

@@ -53,6 +53,13 @@ public class DeseriUtil {
                 ((is.read() & 0xff)));
     }
 
+    public static int getSize(InputStream is) throws IOException {
+        return (((is.read()) << 24) |
+                ((is.read() & 0xff) << 16) |
+                ((is.read() & 0xff) << 8) |
+                ((is.read() & 0xff)));
+    }
+
     public static int getInt(InputStream is) throws IOException {
         return (((is.read()) << 24) |
                 ((is.read() & 0xff) << 16) |
